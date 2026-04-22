@@ -56,7 +56,7 @@ Criar um sistema moderno, intuitivo e escalável, onde:
 
 ---
 
-## 📂 Estrutura Inicial
+## 📂 ESTRUTURA
 
 ```bash
 chamaai/
