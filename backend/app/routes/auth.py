@@ -1,29 +1,7 @@
-from fastapi import APIRouter, Depends, HTTPException, status
-from pydantic import BaseModel, EmailStr
-from types import Literal
+from fastapi import APIRouter, status
+from app.schemas.auth import RegisterSchema
 
-from app.database import get_db
-
-
-router = APIRouter(prefix="/auth", tags=["/Auth"])
-
-# ==========================
-# SCHEMAS TEMPORÁRIOS
-# ==========================
-
-class RegisterSchema(BaseModel):
-    name: str
-    email: EmailStr
-    password: str
-    role: Literal["client", "provider"]
-
-
-class LoginSchema(BaseModel):
-    email: EmailStr
-    password: str
-
-# ==========================
-
+router = APIRouter(prefix="/auth", tags=["Auth"])
 
 @router.post("/register", status_code=status.HTTP_201_CREATED)
 def register(data: RegisterSchema):
