@@ -75,3 +75,14 @@ chamaai/
 │
 │── docs/
 │── README.md
+```
+
+# Rodar Projeto
+
+```
+cd backend
+```
+
+````
+uvicorn app.main:app --reload
+
