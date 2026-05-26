@@ -1,16 +1,14 @@
 from pydantic import BaseModel, EmailStr
-from typing import Literal, Optional, List
-from security.validations import CPF, Telefone, CNPJ
+from app.security.validations import Telefone
+
 
 class RegisterSchema(BaseModel):
-    name: str
+    nome: str
     email: EmailStr
     telefone: Telefone
-    password: str
-    role: Literal["cliente", "prestador"]
+    senha: str
 
 
 class LoginSchema(BaseModel):
     email: EmailStr
-    telefone: Telefone
-    password: str
+    senha: str

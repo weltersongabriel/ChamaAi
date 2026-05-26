@@ -9,16 +9,10 @@ router = APIRouter(
 fake_db = []
 
 
-@router.post(
-    "/register",
-    status_code=status.HTTP_201_CREATED
-)
+@router.post("/register", status_code=status.HTTP_201_CREATED)
 async def register(data: RegisterSchema):
-
-    # Verifica se o email já existe
     existing_user = next(
-        (user for user in fake_db if user["email"] == data.email),
-        None
+        (user for user in fake_db if user["email"] == data.email), None
     )
 
     if existing_user:
@@ -27,14 +21,13 @@ async def register(data: RegisterSchema):
             detail="Email já cadastrado"
         )
 
-    # Cria novo usuário
     new_user = {
         "id": len(fake_db) + 1,
-        "name": data.name,
+        "name": data.nome,
         "email": data.email,
         "telefone": data.telefone,
-        "password": data.password,
-        "role": data.role
+        "password": data.senha,
+        "role": "user"  # ✅ Bug 1 corrigido
     }
 
     fake_db.append(new_user)
@@ -52,18 +45,15 @@ async def register(data: RegisterSchema):
 
 @router.post("/login")
 async def login(data: LoginSchema):
-
-    # Procura usuário no fake_db
     user = next(
         (
             user for user in fake_db
             if user["email"] == data.email
-            and user["password"] == data.password
+            and user["password"] == data.senha  # ✅ Bug 2 corrigido
         ),
         None
     )
 
-    # Usuário não encontrado
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
