@@ -1,5 +1,7 @@
 from fastapi import APIRouter, status, HTTPException
 from app.schemas.auth import RegisterSchema, LoginSchema
+from app.models.user import User
+from app.database.database import get_db
 
 router = APIRouter(
     prefix="/auth",
