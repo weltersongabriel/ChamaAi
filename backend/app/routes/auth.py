@@ -8,6 +8,9 @@ from app.database.database import get_db
 from app.utils.security import (hash_password, verify_password)
 from app.auth.jwt_handler import create_access_token
 
+from app.auth.dependencies import get_current_user
+from app.models.user import User
+
 router = APIRouter(
     prefix="/auth",
     tags=["Auth"]
@@ -75,12 +78,12 @@ async def login(
         )
 
     access_token = create_access_token(
-        data={
-            "sub": str(user.id),
-            "email": user.email,
-            "role": user.role
-        }
-    )
+    data={
+        "sub": str(user.id),
+        "email": user.email,
+        "role": user.role
+    }
+)
 
     return {
         "message": "Login realizado com sucesso",
@@ -92,3 +95,18 @@ async def login(
         },
         "access_token": access_token
     }
+
+
+@router.get("/me")
+async def me(
+    current_user: User = Depends(get_current_user)
+):
+    return {
+        "id": current_user.id,
+        "name": current_user.name,
+        "email": current_user.email,
+        "role": current_user.role
+    }   
+
+#router.get("/dashboard")
+#@router.post("/services")

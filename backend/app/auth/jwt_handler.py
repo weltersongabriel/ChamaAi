@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from jose import jwt
+from jose import jwt, JWTError
 
 SECRET_KEY = "chama_ai_secret_key"
 ALGORITHM = "HS256"
@@ -19,3 +19,21 @@ def create_access_token(data: dict):
         algorithm=ALGORITHM
         )
     return encoded_jwt
+
+# Função para verificar o token JWT
+def verify_token(token: str):
+
+    try:
+        payload = jwt.decode(
+            token,
+            SECRET_KEY,
+            algorithms=[ALGORITHM]
+        )
+
+        print(payload)
+
+        return payload
+
+    except JWTError as e:
+        print(e)
+        return None
