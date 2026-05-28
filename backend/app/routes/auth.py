@@ -5,6 +5,8 @@ from app.schemas.auth import RegisterSchema, LoginSchema
 from app.models.user import User
 from app.database.database import get_db
 
+from app.utils.security import (hash_password, verify_password)
+
 router = APIRouter(
     prefix="/auth",
     tags=["Auth"]
@@ -33,7 +35,7 @@ async def register(
         name=data.nome,
         email=data.email,
         telefone=data.telefone,
-        password=data.senha,
+        password=hash_password(data.senha),
         role="user"
     )
 
@@ -62,7 +64,10 @@ async def login(
         User.email == data.email
     ).first()
 
-    if not user or user.password != data.senha:
+    if not user or not verify_password(
+        data.senha,
+        user.password
+    ):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Email ou senha inválidos"
