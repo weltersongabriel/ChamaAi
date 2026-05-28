@@ -6,6 +6,7 @@ from app.models.user import User
 from app.database.database import get_db
 
 from app.utils.security import (hash_password, verify_password)
+from app.auth.jwt_handler import create_access_token
 
 router = APIRouter(
     prefix="/auth",
@@ -73,6 +74,14 @@ async def login(
             detail="Email ou senha inválidos"
         )
 
+    access_token = create_access_token(
+        data={
+            "sub": str(user.id),
+            "email": user.email,
+            "role": user.role
+        }
+    )
+
     return {
         "message": "Login realizado com sucesso",
         "user": {
@@ -81,5 +90,5 @@ async def login(
             "email": user.email,
             "role": user.role
         },
-        "access_token": "token_fake_por_enquanto"
+        "access_token": access_token
     }
