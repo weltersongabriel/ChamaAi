@@ -1,10 +1,15 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+
 from app.database.database import engine, Base
-from app.models import user
-from app.routes import auth
+
 from app.models.provider import Provider
+from app.models import user
+
+from app.routes import auth
+from app.routes import provider
+
 
 Base.metadata.create_all(bind=engine)
 
@@ -22,3 +27,4 @@ app.add_middleware(
 )
 
 app.include_router(auth.router)
+app.include_router(provider.router)
