@@ -4,6 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from app.database.database import engine, Base
 from app.models import user
 from app.routes import auth
+from app.models.provider import Provider
 
 Base.metadata.create_all(bind=engine)
 
