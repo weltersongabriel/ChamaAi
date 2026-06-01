@@ -18,7 +18,8 @@ class Provider(Base):
         nullable=False,)
     
     bio = Column(String(500))
-    categoria = Column(String(100))
+    category_id = Column(Integer, ForeignKey("categories.id"))
+    category = relationship("Category", back_populates="providers")
     cidade = Column(String(100))
     estado = Column(String(100))
     whatsapp = Column(String(20))

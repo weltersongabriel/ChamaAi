@@ -5,7 +5,8 @@ from fastapi.staticfiles import StaticFiles
 from app.database.database import engine, Base
 
 from app.models.provider import Provider
-from app.models import user
+from app.models.user import User
+from app.models.category import Category
 
 from app.routes import auth
 from app.routes import provider
