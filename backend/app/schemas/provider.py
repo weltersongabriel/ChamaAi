@@ -26,3 +26,6 @@ class ProviderUpdateSchema(BaseModel):
     cidade: str
     estado: str
     whatsapp: str
+
+class ProviderStatusSchema(BaseModel):
+    status: str

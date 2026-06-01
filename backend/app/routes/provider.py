@@ -4,7 +4,12 @@ from app.auth.dependencies import get_current_user
 from app.database.database import get_db
 from app.models.user import User
 from app.models.provider import Provider
-from app.schemas.provider import ProviderCreateSchema, ProviderUpdateSchema, ProviderResponseSchema
+from app.schemas.provider import ( 
+    ProviderCreateSchema,
+    ProviderUpdateSchema,
+    ProviderResponseSchema,
+    ProviderStatusSchema
+)
 
 router = APIRouter(
     prefix="/providers",
@@ -71,7 +76,7 @@ async def get_provider_by_id(
 ):
 
     provider = db.query(Provider).filter(
-        Provider.id == provider_id
+        Provider.status == "ativo"
     ).first()
 
     if not provider:
@@ -133,4 +138,43 @@ async def update_provider(
             "estado": provider.estado,
             "status": provider.status
         }
+    }
+
+@router.patch("/{provider_id}/status")
+async def update_provider_status(
+    provider_id: int,
+    data: ProviderStatusSchema,
+    db: Session = Depends(get_db),
+    # current_user: User = Depends(get_current_user)
+):
+    provider = db.query(Provider).filter(
+        Provider.id == provider_id
+    ).first()
+
+    if not provider:
+        raise HTTPException(
+            status_code=404,
+            detail="Prestador não encontrado"
+        )
+
+    # if provider.user_id != current_user.id:
+    #     raise HTTPException(
+    #         status_code=403,
+    #         detail="Acesso negado. Você só pode atualizar seu próprio perfil profissional."
+    #     )
+
+    if data.status not in ["ativo", "inativo"]:
+        raise HTTPException(
+            status_code=400,
+            detail="Status inválido. O status deve ser 'ativo' ou 'inativo'."
+        )
+    
+    provider.status = data.status
+
+    db.commit()
+    db.refresh(provider)
+
+    return {
+        "message": "Status atualizado com sucesso.",
+        "status": provider.status
     }
