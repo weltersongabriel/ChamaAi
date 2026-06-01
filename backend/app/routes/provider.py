@@ -4,7 +4,7 @@ from app.auth.dependencies import get_current_user
 from app.database.database import get_db
 from app.models.user import User
 from app.models.provider import Provider
-from app.schemas.provider import ProviderCreateSchema
+from app.schemas.provider import ProviderCreateSchema, ProviderUpdateSchema, ProviderResponseSchema
 
 router = APIRouter(
     prefix="/providers",
@@ -89,4 +89,48 @@ async def get_provider_by_id(
         "whatsapp": provider.whatsapp,
         "bio": provider.bio,
         "user_id": provider.user_id
+    }
+
+
+@router.put("/{provider_id}")
+async def update_provider(
+    provider_id: int,
+    data: ProviderUpdateSchema,
+    db: Session = Depends(get_db),
+    # current_user: User = Depends(get_current_user)
+):
+    provider = db.query(Provider).filter(
+        Provider.id == provider_id
+    ).first()
+
+    if not provider:
+        raise HTTPException(
+            status_code=404,
+            detail="Prestador não encontrado"
+        )
+
+    # if provider.user_id != current_user.id:
+    #     raise HTTPException(
+    #         status_code=403,
+    #         detail="Acesso negado. Você só pode atualizar seu próprio perfil profissional."
+    #     )
+
+    provider.bio = data.bio
+    provider.categoria = data.categoria
+    provider.cidade = data.cidade
+    provider.estado = data.estado
+    provider.whatsapp = data.whatsapp
+
+    db.commit()
+    db.refresh(provider)
+
+    return {
+        "message": "Perfil profissional atualizado com sucesso.",
+        "provider": {
+            "id": provider.id,
+            "categoria": provider.categoria,
+            "cidade": provider.cidade,
+            "estado": provider.estado,
+            "status": provider.status
+        }
     }

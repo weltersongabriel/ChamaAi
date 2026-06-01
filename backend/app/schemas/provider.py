@@ -18,3 +18,11 @@ class ProviderResponseSchema(ProviderCreateSchema):
 
     class Config:
         from_attributes = True
+
+
+class ProviderUpdateSchema(BaseModel):
+    bio: str
+    categoria: str
+    cidade: str
+    estado: str
+    whatsapp: str
