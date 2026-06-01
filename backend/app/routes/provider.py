@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 from app.auth.dependencies import get_current_user
 from app.database.database import get_db
@@ -61,4 +61,32 @@ async def create_provider(
             "estado": new_provider.estado,
             "status": new_provider.status
         }
+    }
+
+
+@router.get("/{provider_id}")
+async def get_provider_by_id(
+    provider_id: int,
+    db: Session = Depends(get_db)
+):
+
+    provider = db.query(Provider).filter(
+        Provider.id == provider_id
+    ).first()
+
+    if not provider:
+        raise HTTPException(
+            status_code=404,
+            detail="Prestador não encontrado"
+        )
+
+    return {
+        "id": provider.id,
+        "categoria": provider.categoria,
+        "cidade": provider.cidade,
+        "estado": provider.estado,
+        "status": provider.status,
+        "whatsapp": provider.whatsapp,
+        "bio": provider.bio,
+        "user_id": provider.user_id
     }
