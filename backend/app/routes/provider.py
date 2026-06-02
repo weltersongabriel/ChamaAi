@@ -2,8 +2,11 @@ from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 from app.auth.dependencies import get_current_user
 from app.database.database import get_db
+
 from app.models.user import User
 from app.models.provider import Provider
+from app.models.category import Category
+
 from app.schemas.provider import ( 
     ProviderCreateSchema,
     ProviderUpdateSchema,
@@ -27,6 +30,17 @@ async def create_provider(
     data: ProviderCreateSchema,
     db: Session = Depends(get_db)
 ):
+    # Verificar se a categoria existe
+    category = db.query(Category).filter(
+        Category.id == data.category_id
+    ).first()
+    
+    if not category:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Categoria não encontrada."
+        )
+
     #Verificar se o usuário já possui perfil
     existing_provider = db.query(Provider).filter(
     Provider.user_id == 1
@@ -46,7 +60,7 @@ async def create_provider(
         user_id=1,
         #user_id = current_user.id,
         bio = data.bio,
-        categoria = data.categoria,
+        category_id = data.category_id,
         cidade = data.cidade,
         estado = data.estado,
         whatsapp = data.whatsapp,
@@ -61,7 +75,7 @@ async def create_provider(
         "message": "Perfil profissional criado com sucesso.",
         "provider": {
             "id": new_provider.id,
-            "categoria": new_provider.categoria,
+            "category_id": new_provider.category_id,
             "cidade": new_provider.cidade,
             "estado": new_provider.estado,
             "status": new_provider.status
@@ -87,7 +101,7 @@ async def get_provider_by_id(
 
     return {
         "id": provider.id,
-        "categoria": provider.categoria,
+        "categoria": provider.category.name,
         "cidade": provider.cidade,
         "estado": provider.estado,
         "status": provider.status,
@@ -121,7 +135,7 @@ async def update_provider(
     #     )
 
     provider.bio = data.bio
-    provider.categoria = data.categoria
+    provider.category_id = data.category_id
     provider.cidade = data.cidade
     provider.estado = data.estado
     provider.whatsapp = data.whatsapp
@@ -133,7 +147,7 @@ async def update_provider(
         "message": "Perfil profissional atualizado com sucesso.",
         "provider": {
             "id": provider.id,
-            "categoria": provider.categoria,
+            "category_id": provider.category_id,
             "cidade": provider.cidade,
             "estado": provider.estado,
             "status": provider.status

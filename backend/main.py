@@ -10,6 +10,7 @@ from app.models.category import Category
 
 from app.routes import auth
 from app.routes import provider
+from app.routes.categories import router as category_router
 
 
 Base.metadata.create_all(bind=engine)
@@ -29,3 +30,4 @@ app.add_middleware(
 
 app.include_router(auth.router)
 app.include_router(provider.router)
+app.include_router(category_router)

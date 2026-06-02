@@ -2,7 +2,7 @@ from pydantic import BaseModel
 
 class ProviderCreateSchema(BaseModel):
     bio: str
-    categoria: str
+    category_id: int
     cidade: str
     estado: str
     whatsapp: str
@@ -10,7 +10,7 @@ class ProviderCreateSchema(BaseModel):
 class ProviderResponseSchema(ProviderCreateSchema):
     id: int
     bio: str
-    categoria: str
+    category_id: int
     cidade: str
     estado: str
     whatsapp: str
@@ -22,7 +22,7 @@ class ProviderResponseSchema(ProviderCreateSchema):
 
 class ProviderUpdateSchema(BaseModel):
     bio: str
-    categoria: str
+    category_id: int
     cidade: str
     estado: str
     whatsapp: str
