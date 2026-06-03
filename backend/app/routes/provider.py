@@ -163,9 +163,9 @@ async def get_provider_by_id(
 async def update_provider(
     provider_id: int,
     data: ProviderUpdateSchema,
-    db: Session = Depends(get_db),
-    # current_user: User = Depends(get_current_user)
+    db: Session = Depends(get_db)
 ):
+
     provider = db.query(Provider).filter(
         Provider.id == provider_id
     ).first()
@@ -176,11 +176,15 @@ async def update_provider(
             detail="Prestador não encontrado"
         )
 
-    # if provider.user_id != current_user.id:
-    #     raise HTTPException(
-    #         status_code=403,
-    #         detail="Acesso negado. Você só pode atualizar seu próprio perfil profissional."
-    #     )
+    category = db.query(Category).filter(
+        Category.id == data.category_id
+    ).first()
+
+    if not category:
+        raise HTTPException(
+            status_code=404,
+            detail="Categoria não encontrada"
+        )
 
     provider.bio = data.bio
     provider.category_id = data.category_id
@@ -192,13 +196,14 @@ async def update_provider(
     db.refresh(provider)
 
     return {
-        "message": "Perfil profissional atualizado com sucesso.",
+        "message": "Perfil atualizado com sucesso",
         "provider": {
             "id": provider.id,
-            "category_id": provider.category_id,
+            "bio": provider.bio,
+            "categoria": provider.category.name,
             "cidade": provider.cidade,
             "estado": provider.estado,
-            "status": provider.status
+            "whatsapp": provider.whatsapp
         }
     }
 
@@ -239,4 +244,33 @@ async def update_provider_status(
     return {
         "message": "Status atualizado com sucesso.",
         "status": provider.status
+    }
+
+@router.delete("/{provider_id}")
+async def delete_provider(
+    provider_id: int,
+    db: Session = Depends(get_db),
+    # current_user: User = Depends(get_current_user)
+):
+    provider = db.query(Provider).filter(
+        Provider.id == provider_id
+    ).first()
+
+    if not provider:
+        raise HTTPException(
+            status_code=404,
+            detail="Prestador não encontrado"
+        )
+
+    # if provider.user_id != current_user.id:
+    #     raise HTTPException(
+    #         status_code=403,
+    #         detail="Acesso negado. Você só pode excluir seu próprio perfil profissional."
+    #     )
+
+    db.delete(provider)
+    db.commit()
+
+    return {
+        "message": "Prestador excluído com sucesso."
     }
