@@ -6,6 +6,7 @@ from app.database.database import get_db
 from app.models.user import User
 from app.models.provider import Provider
 from app.models.category import Category
+from app.models.provider import Provider
 
 from app.schemas.provider import ( 
     ProviderCreateSchema,
@@ -83,6 +84,53 @@ async def create_provider(
     }
 
 
+@router.get("/")
+async def get_providers(
+    category_id: int | None = Query(None),
+    cidade: str | None = Query(None),
+    status: str | None = Query(None),
+
+    page: int = Query(1, ge=1),
+    limit: int = Query(10, ge=1, le=100),
+
+    db: Session = Depends(get_db)
+):
+    query = db.query(Provider)
+
+    if category_id:
+        query = query.filter(Provider.category_id == category_id)
+    
+    if cidade:
+        query = query.filter(Provider.cidade.ilike(f"%{cidade}%"))
+
+    if status:
+        query = query.filter(Provider.status == status)
+    
+    total = query.count()
+
+    offset = (page - 1) * limit
+
+    providers = query.offset(offset).limit(limit).all()
+
+    return {
+        "total": total,
+        "page": page,
+        "limit": limit,
+        "data": [
+            {
+                "id": provider.id,
+                "bio": provider.bio,
+                "categoria": provider.category.name if provider.category else None,
+                "cidade": provider.cidade,
+                "estado": provider.estado,
+                "status": provider.status,
+                "whatsapp": provider.whatsapp
+            }
+            for provider in providers
+        ]
+    }
+
+
 @router.get("/{provider_id}")
 async def get_provider_by_id(
     provider_id: int,
@@ -90,7 +138,7 @@ async def get_provider_by_id(
 ):
 
     provider = db.query(Provider).filter(
-        Provider.status == "ativo"
+        Provider.id == provider_id
     ).first()
 
     if not provider:
@@ -101,13 +149,13 @@ async def get_provider_by_id(
 
     return {
         "id": provider.id,
-        "categoria": provider.category.name,
+        "bio": provider.bio,
+        "categoria": provider.category.name if provider.category else None,
         "cidade": provider.cidade,
         "estado": provider.estado,
         "status": provider.status,
         "whatsapp": provider.whatsapp,
-        "bio": provider.bio,
-        "user_id": provider.user_id
+        "foto_perfil": provider.foto_perfil
     }
 
 
