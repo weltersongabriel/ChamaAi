@@ -12,3 +12,4 @@ class User(Base):
     telefone = Column(String(20), nullable=True)
     password = Column(String(255), nullable=False)
     role = Column(String(20), nullable=False)
+    reviews = relationship("Review", back_populates="user")
