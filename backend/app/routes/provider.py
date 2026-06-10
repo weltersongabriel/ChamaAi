@@ -8,6 +8,9 @@ from app.models.provider import Provider
 from app.models.category import Category
 from app.models.provider import Provider
 
+from sqlalchemy import func
+from app.models.review import Review
+
 from app.schemas.provider import ( 
     ProviderCreateSchema,
     ProviderUpdateSchema,
@@ -113,22 +116,43 @@ async def get_providers(
     providers = query.offset(offset).limit(limit).all()
 
     return {
-        "total": total,
-        "page": page,
-        "limit": limit,
-        "data": [
-            {
-                "id": provider.id,
-                "bio": provider.bio,
-                "categoria": provider.category.name if provider.category else None,
-                "cidade": provider.cidade,
-                "estado": provider.estado,
-                "status": provider.status,
-                "whatsapp": provider.whatsapp
-            }
-            for provider in providers
-        ]
-    }
+    "total": total,
+    "page": page,
+    "limit": limit,
+    "data": [
+        {
+            "id": provider.id,
+            "bio": provider.bio,
+            "categoria": provider.category.name if provider.category else None,
+            "cidade": provider.cidade,
+            "estado": provider.estado,
+            "status": provider.status,
+            "whatsapp": provider.whatsapp,
+
+            "media_avaliacoes": (
+                round(
+                    float(
+                        db.query(func.avg(Review.rating))
+                        .filter(
+                            Review.provider_id == provider.id
+                        )
+                        .scalar() or 0
+                    ),
+                    1
+                )
+            ),
+
+            "total_avaliacoes": (
+                db.query(Review)
+                .filter(
+                    Review.provider_id == provider.id
+                )
+                .count()
+            )
+        }
+        for provider in providers
+    ]
+}
 
 
 @router.get("/{provider_id}")
@@ -146,6 +170,21 @@ async def get_provider_by_id(
             status_code=404,
             detail="Prestador não encontrado"
         )
+    
+    total_reviews = db.query(Review).filter(
+        Review.provider_id == provider.id
+    ).count()
+
+    average_rating = db.query(
+        func.avg(Review.rating)
+    ).filter(
+        Review.provider_id == provider.id
+    ).scalar()
+
+    average_rating = (
+        round(float(average_rating), 1)
+        if average_rating else 0
+    )
 
     return {
         "id": provider.id,
@@ -155,7 +194,8 @@ async def get_provider_by_id(
         "estado": provider.estado,
         "status": provider.status,
         "whatsapp": provider.whatsapp,
-        "foto_perfil": provider.foto_perfil
+        "media_avaliacoes": average_rating,
+        "total_avaliacoes": total_reviews
     }
 
 
