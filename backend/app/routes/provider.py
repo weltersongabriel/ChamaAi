@@ -17,10 +17,64 @@ from app.schemas.provider import (
     ProviderResponseSchema,
     ProviderStatusSchema
 )
+import shutil
+import os
+from fastapi import UploadFile, File
 
 router = APIRouter(
     prefix="/providers",
     tags=["Providers"])
+
+
+@router.post("/{provider_id}/photo")
+async def upload_photo(
+provider_id: int,
+file: UploadFile = File(...),
+db: Session = Depends(get_db)
+):
+    
+    provider = db.query(Provider).filter(
+        Provider.id == provider_id
+    ).first()
+
+    if not provider:
+        raise HTTPException(
+            status_code=404,
+            detail="Prestador não encontrado"
+        )
+
+    filename = f"provider_{provider_id}_{file.filename}"
+
+    file_path = os.path.join("uploads", filename)
+    
+    with open(file_path, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+
+    provider.foto_perfil = file_path
+    db.commit()
+
+    if file.content_type not in [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+    ]:
+        raise HTTPException(
+            status_code=400,
+            detail="Tipo de arquivo inválido. Apenas imagens são permitidas."
+        )
+    
+    MAX_SIZE = 1 * 1024 * 1024
+
+    if file.size > MAX_SIZE:
+        raise HTTPException(
+            status_code=400,
+            detail="Tamanho do arquivo excede o limite permitido (1MB)."
+        )
+
+    return {
+        "message": "Foto enviada com sucesso.",
+        "foto_url": f"/uploads/{filename}"
+    }
 
 # @router.post("/")
 # async def create_provider(

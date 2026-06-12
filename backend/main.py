@@ -22,6 +22,12 @@ app = FastAPI(title="ChamaAí",
 
 Base.metadata.create_all(bind=engine)
 
+app.mount(
+    "/uploads",
+    StaticFiles(directory="uploads"),
+    name="uploads"
+)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
