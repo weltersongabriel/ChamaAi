@@ -5,6 +5,7 @@ from app.database.database import get_db
 from app.models.review import Review
 from app.models.provider import Provider
 from app.schemas.review import ReviewCreateSchema
+from app.schemas.favorite import FavoriteCreateSchema
 
 router = APIRouter(
     prefix="/reviews",

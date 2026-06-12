@@ -12,6 +12,7 @@ from app.routes import auth
 from app.routes import provider
 from app.routes.categories import router as category_router
 from app.routes.review import router as review_router
+from app.routes.favorite import router as favorite_router
 
 
 Base.metadata.create_all(bind=engine)
@@ -33,5 +34,5 @@ app.include_router(auth.router)
 app.include_router(provider.router)
 app.include_router(category_router)
 app.include_router(review_router)
-
+app.include_router(favorite_router)
 # TESTAR SE OS REVIEWS ESTÃO FUNCIONANDO

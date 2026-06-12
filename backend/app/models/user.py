@@ -13,3 +13,4 @@ class User(Base):
     password = Column(String(255), nullable=False)
     role = Column(String(20), nullable=False)
     reviews = relationship("Review", back_populates="user")
+    favorites = relationship("Favorite", back_populates="user")

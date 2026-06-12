@@ -28,3 +28,4 @@ class Provider(Base):
     #Relacionamento com o modelo User
     user = relationship("User", back_populates="provider")
     reviews = relationship("Review", back_populates="provider")
+    favorites = relationship("Favorite", back_populates="provider")
