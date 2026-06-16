@@ -41,4 +41,3 @@ app.include_router(provider.router)
 app.include_router(category_router)
 app.include_router(review_router)
 app.include_router(favorite_router)
-# TESTAR SE OS REVIEWS ESTÃO FUNCIONANDO

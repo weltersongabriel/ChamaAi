@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Query
+from flask_login import current_user
 from sqlalchemy.orm import Session
 from app.auth.dependencies import get_current_user
 from app.database.database import get_db
@@ -29,13 +30,20 @@ router = APIRouter(
 @router.post("/{provider_id}/photo")
 async def upload_photo(
 provider_id: int,
-file: UploadFile = File(...),
-db: Session = Depends(get_db)
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
 ):
     
     provider = db.query(Provider).filter(
         Provider.id == provider_id
     ).first()
+
+    if provider.user_id != current_user.id:
+        raise HTTPException(
+            status_code=403,
+            detail="Voce não tem permissão para editar este perfil."
+        )
 
     if not provider:
         raise HTTPException(
@@ -86,7 +94,8 @@ db: Session = Depends(get_db)
 @router.post("/")
 async def create_provider(
     data: ProviderCreateSchema,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user) 
 ):
     # Verificar se a categoria existe
     category = db.query(Category).filter(
@@ -101,7 +110,7 @@ async def create_provider(
 
     #Verificar se o usuário já possui perfil
     existing_provider = db.query(Provider).filter(
-    Provider.user_id == 1
+    Provider.user_id == current_user.id
 ).first()
     # existing_provider = db.query(Provider).filter(
     #     Provider.user_id == current_user.id
@@ -115,8 +124,7 @@ async def create_provider(
     
     #Criar novo perfil profissional
     new_provider = Provider(
-        user_id=1,
-        #user_id = current_user.id,
+        user_id=current_user.id,
         bio = data.bio,
         category_id = data.category_id,
         cidade = data.cidade,
@@ -257,7 +265,8 @@ async def get_provider_by_id(
 async def update_provider(
     provider_id: int,
     data: ProviderUpdateSchema,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
 ):
 
     provider = db.query(Provider).filter(
@@ -306,24 +315,24 @@ async def update_provider_status(
     provider_id: int,
     data: ProviderStatusSchema,
     db: Session = Depends(get_db),
-    # current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
     provider = db.query(Provider).filter(
         Provider.id == provider_id
     ).first()
+
+    if provider.user_id != current_user.id:
+        raise HTTPException(
+            status_code=403,
+            detail="Voce não tem permissão para editar este perfil."
+        )
 
     if not provider:
         raise HTTPException(
             status_code=404,
             detail="Prestador não encontrado"
         )
-
-    # if provider.user_id != current_user.id:
-    #     raise HTTPException(
-    #         status_code=403,
-    #         detail="Acesso negado. Você só pode atualizar seu próprio perfil profissional."
-    #     )
-
+    
     if data.status not in ["ativo", "inativo"]:
         raise HTTPException(
             status_code=400,
@@ -344,7 +353,7 @@ async def update_provider_status(
 async def delete_provider(
     provider_id: int,
     db: Session = Depends(get_db),
-    # current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
     provider = db.query(Provider).filter(
         Provider.id == provider_id
@@ -356,11 +365,11 @@ async def delete_provider(
             detail="Prestador não encontrado"
         )
 
-    # if provider.user_id != current_user.id:
-    #     raise HTTPException(
-    #         status_code=403,
-    #         detail="Acesso negado. Você só pode excluir seu próprio perfil profissional."
-    #     )
+    if provider.user_id != current_user.id:
+        raise HTTPException(
+            status_code=403,
+            detail="Acesso negado. Você só pode excluir seu próprio perfil profissional."
+        )
 
     db.delete(provider)
     db.commit()

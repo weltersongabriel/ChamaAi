@@ -5,6 +5,8 @@ from app.database.database import get_db
 from app.models.favorite import Favorite
 from app.models.provider import Provider
 from app.schemas.favorite import FavoriteCreateSchema
+from backend.app.auth.dependencies import get_current_user
+from backend.app.models.user import User
 
 router = APIRouter(
     prefix="/favorites",
@@ -14,7 +16,8 @@ router = APIRouter(
 @router.post("/")
 async def create_favorite(
     data: FavoriteCreateSchema,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
 ):
     # Verificar se o prestador de serviço existe
     provider = db.query(Provider).filter(
@@ -28,7 +31,7 @@ async def create_favorite(
         )
     
     existing = db.query(Favorite).filter(
-        Favorite.user_id == 1,  # Substitua pelo ID do usuário autenticado
+        Favorite.user_id == current_user.id,
         Favorite.provider_id == data.provider_id
     ).first()
 
@@ -40,7 +43,7 @@ async def create_favorite(
 
     # Criar o favorito
     favorite = Favorite(
-        user_id=1,  # Substitua pelo ID do usuário autenticado
+        user_id=current_user.id,
         provider_id=data.provider_id
     )
     db.add(favorite)
@@ -51,9 +54,12 @@ async def create_favorite(
 
 
 @router.get("/")
-async def list_favorites(db: Session = Depends(get_db)):
+async def list_favorites(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
     favorites = db.query(Favorite).filter(
-        Favorite.user_id == 1  # Substitua pelo ID do usuário autenticado
+        Favorite.user_id == current_user.id
     ).all()
     
     return [
@@ -76,11 +82,12 @@ async def list_favorites(db: Session = Depends(get_db)):
 @router.delete("/{favorite_id}")
 async def delete_favorite(
     favorite_id: int,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
 ):
     favorite = db.query(Favorite).filter(
         Favorite.id == favorite_id,
-        Favorite.user_id == 1  # Substitua pelo ID do usuário autenticado
+        Favorite.user_id == current_user.id
     ).first()
     
     if not favorite:

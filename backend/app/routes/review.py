@@ -6,6 +6,8 @@ from app.models.review import Review
 from app.models.provider import Provider
 from app.schemas.review import ReviewCreateSchema
 from app.schemas.favorite import FavoriteCreateSchema
+from backend.app.auth.dependencies import get_current_user
+from backend.app.models.user import User
 
 router = APIRouter(
     prefix="/reviews",
@@ -15,7 +17,8 @@ router = APIRouter(
 @router.post("/")
 async def create_review(
     data: ReviewCreateSchema,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
 ):
     # Verificar se o prestador de serviço existe
     provider = db.query(Provider).filter(
@@ -24,14 +27,25 @@ async def create_review(
     
     if not provider:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
+            status_code=400,
             detail="Prestador de serviço não encontrado."
+        )
+    
+    existing_review = db.query(Review).filter(
+        Review.user_id == current_user.id,
+        Review.provider_id == data.provider_id
+    ).first()
+
+    if existing_review:
+        raise HTTPException(
+            status_code=400,
+            detail="Você já avaliou este prestador de serviço."
         )
     
     # Criar nova avaliação
     new_review = Review(
         provider_id=data.provider_id,
-        user_id=1,  # Substitua pelo ID do usuário autenticado
+        user_id=current_user.id,
         rating=data.rating,
         comment=data.comment
     )
