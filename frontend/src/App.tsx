@@ -1,12 +1,10 @@
-import { teste } from './utils/test';
+import Layout from "./components/Layout";
+import Home from "./pages/Home";
 
-function App() {
-  console.log(teste);
+export default function App() {
   return (
-    <div className="App">
-      <h1>ChamaAí - Frontend</h1>
-    </div>
+    <Layout>
+      <Home />
+    </Layout>
   );
 }
-
-export default App;
