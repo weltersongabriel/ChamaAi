@@ -1,12 +1,10 @@
 export default function Home () {
     return(
         <div>
-      <h2 className="text-3xl font-bold">
-        Bem-vindo!
-      </h2>
+      <h1 className="text-4xl font-bold">Chama Aí 🔥</h1>
 
       <p className="mt-4 text-zinc-400">
-        Projeto configurado com sucesso.
+        Bem vindo ao Chama Aí.
       </p>
     </div>
     );
