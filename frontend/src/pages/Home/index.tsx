@@ -1,11 +1,14 @@
+import Button from "@/components/ui/Button";
+
 export default function Home () {
     return(
-        <div>
-      <h1 className="text-4xl font-bold">Chama Aí 🔥</h1>
+        <div className="min-h-screen flex flex-col items-center justify-center gap-6 bg-zinc-950 text-white">
+          <h1 className="text-5lx font-bold">Chama Aí</h1>
 
-      <p className="mt-4 text-zinc-400">
-        Bem vindo ao Chama Aí.
-      </p>
-    </div>
+          <Button>Começar</Button>
+          <Button variant="secondary">Entrar</Button>
+          <Button variant="outline">Saiba mais</Button>
+
+        </div>
     );
 }
