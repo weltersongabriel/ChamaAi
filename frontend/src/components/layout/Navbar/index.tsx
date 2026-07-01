@@ -1,5 +1,6 @@
-import Button from "@/components/ui/Button";
+import {Link} from "react-router-dom";
 
+import Button from "@/components/ui/Button";
 import chama from "@/assets/chama.png";
 
 export default function Navbar() {
@@ -7,36 +8,42 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 border-b border-zinc-800 bg-zinc-950/80 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
         {/* Logo */}
-        <img
+        <Link to="/" className="flex items-center">
+          <img
             src={chama}
             alt="Logo Chama Aí"
-            className="h-10 w-auto"
-            />
+            className="h-12 w-auto"
+          />
+        </Link>
 
         {/* Menu */}
         <nav className="hidden gap-8 md:flex">
-          <a href="#" className="text-zinc-300 transition hover:text-white">
+          <Link to="/recursos" className="text-zinc-300 transition hover:text-white">
             Recursos
-          </a>
+          </Link>
 
-          <a href="#" className="text-zinc-300 transition hover:text-white">
+          <Link to="/planos" className="text-zinc-300 transition hover:text-white">
             Planos
-          </a>
+          </Link>
 
-          <a href="#" className="text-zinc-300 transition hover:text-white">
+          <Link to="/faq" className="text-zinc-300 transition hover:text-white">
             FAQ
-          </a>
+          </Link>
         </nav>
 
         {/* Botões */}
         <div className="flex gap-3">
-          <Button variant="outline">
-            Entrar
-          </Button>
+          <Link to="/login">
+            <Button variant="outline">
+              Entrar
+            </Button>
+          </Link>
 
-          <Button>
-            Criar conta
-          </Button>
+          <Link to="/cadastro">
+            <Button>
+              Criar conta
+            </Button>
+          </Link>
         </div>
       </div>
     </header>

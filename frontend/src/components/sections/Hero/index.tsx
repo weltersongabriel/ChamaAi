@@ -1,4 +1,5 @@
 import Button from "@/components/ui/Button";
+import DashboardPreview from "./DashboardPreview";
 
 export default function Hero() {
     return (
@@ -31,26 +32,8 @@ export default function Hero() {
         </div>
 
         {/* Preview do Dashboard */}
-        <div className="w-full max-w-xl rounded-2xl border border-zinc-800 bg-zinc-900 p-6 shadow-2xl">
-          <div className="mb-6 flex gap-2">
-            <div className="h-3 w-3 rounded-full bg-red-500" />
-            <div className="h-3 w-3 rounded-full bg-yellow-500" />
-            <div className="h-3 w-3 rounded-full bg-green-500" />
-          </div>
-
-          <div className="space-y-4">
-            <div className="h-10 rounded-lg bg-zinc-800" />
-            <div className="h-32 rounded-lg bg-zinc-800" />
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="h-24 rounded-lg bg-zinc-800" />
-              <div className="h-24 rounded-lg bg-zinc-800" />
-            </div>
-
-            <div className="h-16 rounded-lg bg-zinc-800" />
-          </div>
-        </div>
+        <DashboardPreview />
       </div>
     </section>
-    );
+  );
 }
