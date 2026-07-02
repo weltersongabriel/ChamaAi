@@ -1,6 +1,8 @@
 import Card from "@/components/ui/Card";
 import { BarChart3, Ticket, Users, ShieldCheck, Zap, ChartColumn } from "lucide-react";
 
+import SectionTitle from "@/components/ui/SectionTitle";
+
 const features = [
     {
         icon: Ticket,
@@ -40,20 +42,11 @@ export default function Features() {
       id="recursos"
       className="mx-auto max-w-7xl px-6 py-24"
     >
-      <div className="text-center">
-        <span className="text-blue-500 font-semibold uppercase tracking-wider">
-          Recursos
-        </span>
-
-        <h2 className="mt-4 text-4xl font-bold">
-          Tudo o que você precisa para gerenciar sua comunidade
-        </h2>
-
-        <p className="mt-4 text-zinc-400 max-w-2xl mx-auto">
-          Desenvolvido para facilitar o gerenciamento do seu servidor,
-          economizando tempo e melhorando a organização.
-        </p>
-      </div>
+      <SectionTitle
+        badge="Recursos"
+        title="Tudo o que você precisa para gerenciar sua comunidade"
+        description="Desenvolvido para facilitar o gerenciamento do seu servidor, economizando tempo e melhorando a organização."
+      />
 
       <div className="mt-16 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {features.map(({ icon: Icon, title, description }) => (
