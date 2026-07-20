@@ -1,8 +1,16 @@
-import logo from "@/assets/chama.png";
+import logo from "@/assets/chama.png"
 
-export default function AuthHeader() {
-    return (
-        <div className="mb-8 text-center">
+interface AuthHeaderProps {
+  title: string;
+  description: string;
+}
+
+export default function AuthHeader({
+  title,
+  description,
+}: AuthHeaderProps) {
+  return (
+    <div className="mb-8 text-center">
 
       <img
         src={logo}
@@ -11,14 +19,13 @@ export default function AuthHeader() {
       />
 
       <h1 className="mt-6 text-3xl font-bold text-white">
-        Bem-vindo de volta 👋
+        {title}
       </h1>
 
       <p className="mt-2 text-zinc-400">
-        Faça login para acessar sua conta.
+        {description}
       </p>
 
     </div>
-
-    );
+  );
 }

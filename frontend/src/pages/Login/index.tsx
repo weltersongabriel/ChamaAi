@@ -15,7 +15,10 @@ export default function Login() {
 
           <AuthCard>
 
-            <AuthHeader />
+            <AuthHeader
+              title="Bem-vindo de volta 👋"
+              description="Faça login para acessar sua conta."
+            />
 
             <LoginForm />
 
