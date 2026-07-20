@@ -2,12 +2,13 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.database.database import get_db
+from app.auth.dependencies import get_current_user
+from app.models.user import User
 from app.models.review import Review
 from app.models.provider import Provider
 from app.schemas.review import ReviewCreateSchema
 from app.schemas.favorite import FavoriteCreateSchema
-from backend.app.auth.dependencies import get_current_user
-from backend.app.models.user import User
+
 
 router = APIRouter(
     prefix="/reviews",

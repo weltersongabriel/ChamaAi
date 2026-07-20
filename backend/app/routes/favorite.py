@@ -5,8 +5,8 @@ from app.database.database import get_db
 from app.models.favorite import Favorite
 from app.models.provider import Provider
 from app.schemas.favorite import FavoriteCreateSchema
-from backend.app.auth.dependencies import get_current_user
-from backend.app.models.user import User
+from app.auth.dependencies import get_current_user
+from app.models.user import User
 
 router = APIRouter(
     prefix="/favorites",
