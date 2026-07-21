@@ -32,22 +32,26 @@ export default function LoginForm() {
   });
 
   async function onSubmit(data: LoginFormData) {
-    try {
-      setApiError("");
+  try {
+    setApiError("");
 
-      const response = await api.post("/auth/login", {
-        username: data.email,
-        password: data.password,
-      });
+    const response = await api.post("/auth/login", {
+      email: data.email,
+      senha: data.password,
+    });
 
-      signIn(response.data.access_token);
+    signIn(response.data.access_token);
 
-      navigate("/dashboard");
-    } catch (error) {
-      console.error(error);
-      setApiError("Email ou senha inválidos.");
-    }
+    navigate("/dashboard");
+  } catch (error: any) {
+    console.error(error.response?.data);
+
+    const message =
+      error.response?.data?.detail || "Email ou senha inválidos.";
+
+    setApiError(message);
   }
+}
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
