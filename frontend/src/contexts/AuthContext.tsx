@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, type ReactNode } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 
 interface AuthContextData {
   token: string | null;
@@ -8,10 +8,20 @@ interface AuthContextData {
 
 const AuthContext = createContext({} as AuthContextData);
 
-export function AuthProvider({ children }: { children: ReactNode }) {
-  const [token, setToken] = useState<string | null>(
-    localStorage.getItem("chamaai.token")
-  );
+export function AuthProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const [token, setToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    const storedToken = localStorage.getItem("chamaai.token");
+
+    if (storedToken) {
+      setToken(storedToken);
+    }
+  }, []);
 
   function signIn(newToken: string) {
     localStorage.setItem("chamaai.token", newToken);
