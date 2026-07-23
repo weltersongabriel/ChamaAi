@@ -14,3 +14,4 @@ class User(Base):
     role = Column(String(20), nullable=False)
     reviews = relationship("Review", back_populates="user")
     favorites = relationship("Favorite", back_populates="user")
+    tickets = relationship("Ticket", back_populates="usuario")
