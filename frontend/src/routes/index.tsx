@@ -5,6 +5,7 @@ import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import Dashboard from "@/pages/Dashboard";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
+import Tickets from "@/pages/Tickets";
 
 export default function AppRoutes() {
   return (
@@ -15,6 +16,11 @@ export default function AppRoutes() {
       <Route path="/dashboard" element={<ProtectedRoute>
         <Dashboard />
       </ProtectedRoute>} />
+      <Route path="/tickets" element={
+        <ProtectedRoute>
+          <Tickets />
+        </ProtectedRoute>
+      } />
     </Routes>
   );
 }

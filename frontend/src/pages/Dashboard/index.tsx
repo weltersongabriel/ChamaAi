@@ -4,6 +4,8 @@ import { Users, Wrench, Clock, TrendingUp } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 
+import { Link } from "react-router-dom";
+
 export default function Dashboard() {
   const navigate = useNavigate();
   const { signOut } = useAuth();
@@ -33,9 +35,12 @@ export default function Dashboard() {
               </p>
             </div>
 
-            <button className="rounded-xl bg-blue-600 px-5 py-3 font-medium text-white transition hover:bg-blue-500">
-              Novo chamado
-            </button>
+            <Link
+                to="/tickets"
+                className="rounded-xl bg-blue-600 px-5 py-3 font-medium text-white transition hover:bg-blue-500"
+              >
+                Novo chamado
+              </Link>
             <button
               onClick={handleLogout}
               className="rounded-xl border border-zinc-700 px-5 py-3 font-medium text-zinc-300 transition hover:bg-zinc-800 hover:text-white"
