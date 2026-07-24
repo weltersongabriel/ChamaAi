@@ -2,3 +2,9 @@ README
 000
 .env
 uploads/
+
+backend/app/routes/ticket.py
+backend/app/models/ticket.py
+backend/app/schemas/ticket.py
+backend/app/crud/ticket.py
+frontend/src/pages/Tickets.tsx
