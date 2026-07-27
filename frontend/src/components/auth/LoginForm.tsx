@@ -42,7 +42,7 @@ export default function LoginForm() {
 
     signIn(response.data.access_token);
 
-    navigate("/dashboard");
+    navigate("/providers");
   } catch (error: any) {
     console.error(error.response?.data);
 

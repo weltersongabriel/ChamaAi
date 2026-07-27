@@ -39,7 +39,7 @@ export default function Navbar() {
             </Button>
           </Link>
 
-          <Link to="/cadastro">
+          <Link to="/register">
             <Button>
               Criar conta
             </Button>
