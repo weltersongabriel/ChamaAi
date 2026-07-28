@@ -282,6 +282,12 @@ async def update_provider(
             detail="Prestador não encontrado"
         )
 
+    if provider.user_id != current_user.id:
+        raise HTTPException(
+        status_code=403,
+        detail="Você não tem permissão para editar este perfil."
+    )
+
     category = db.query(Category).filter(
         Category.id == data.category_id
     ).first()

@@ -44,6 +44,12 @@ export default function Navbar() {
               Criar conta
             </Button>
           </Link>
+
+          <Link to="/provider/create">
+            <Button variant="secondary">
+              Seja um prestador
+            </Button>
+          </Link>
         </div>
       </div>
     </header>
