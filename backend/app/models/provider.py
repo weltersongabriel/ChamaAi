@@ -22,7 +22,7 @@ class Provider(Base):
     category = relationship("Category", back_populates="providers")
     cidade = Column(String(100), nullable=False)
     estado = Column(String(100), nullable=False)
-    whatsapp = Column(String(11), unique=True)
+    whatsapp = Column(String(20), unique=True)
     status = Column(String(20), default="ativo")
     foto_perfil = Column(String(255), nullable=True)
     #Relacionamento com o modelo User

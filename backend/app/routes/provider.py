@@ -151,7 +151,7 @@ async def create_provider(
 
 @router.get("/")
 async def get_providers(
-    category_id: int | None = Query(None),
+    categoria: str | None = Query(None),
     cidade: str | None = Query(None),
     status: str | None = Query(None),
 
@@ -162,8 +162,11 @@ async def get_providers(
 ):
     query = db.query(Provider)
 
-    if category_id:
-        query = query.filter(Provider.category_id == category_id)
+    if categoria:
+        query = (
+            query.join(Category)
+            .filter(Category.name.ilike(f"%{categoria}%"))
+    )
     
     if cidade:
         query = query.filter(Provider.cidade.ilike(f"%{cidade}%"))
