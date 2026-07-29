@@ -1,24 +1,27 @@
-import { UserPlus, Ticket, BarChart2 } from "lucide-react";
+import { Search, UserCheck, MessageCircle } from "lucide-react";
 import StepCard from "./StepCard";
 
 const steps = [
   {
     number: "01",
-    icon: <UserPlus size={28} />,
-    title: "Cadastrar sua comunidade",
-    description: "Crie uma conta e registre sua comunidade para começar a gerenciar seus eventos.",
+    icon: <Search size={28} />,
+    title: "Pesquise um profissional",
+    description:
+      "Escolha a categoria e informe sua cidade para encontrar profissionais próximos de você.",
   },
   {
     number: "02",
-    icon: <Ticket size={28} />,
-    title: "Gerencie os atendimentos",
-    description: "Receba tickets, organize filas e acompanhe o progresso dos atendimentos de forma eficiente.",
+    icon: <UserCheck size={28} />,
+    title: "Escolha o profissional",
+    description:
+      "Compare os perfis, veja as avaliações e encontre o prestador de serviços ideal para sua necessidade.",
   },
   {
     number: "03",
-    icon: <BarChart2 size={28} />,
-    title: "Acompanhe os resultados",
-    description: "Visualize relatórios detalhados e métricas para melhorar continuamente a experiência da sua comunidade.",
+    icon: <MessageCircle size={28} />,
+    title: "Entre em contato",
+    description:
+      "Converse diretamente com o profissional pelo WhatsApp e combine todos os detalhes do serviço.",
   },
 ];
 
@@ -35,17 +38,18 @@ export default function HowItWorks() {
           </span>
 
           <h2 className="mt-6 text-4xl font-bold text-white md:text-5xl">
-            Três passos para transformar sua comunidade.
+            Encontre um profissional em apenas três passos.
           </h2>
 
           <p className="mt-6 text-lg leading-8 text-zinc-400">
-            O Chama Aí simplifica a organização dos atendimentos com um fluxo
-            intuitivo e eficiente.
+            O Chama Aí conecta você aos melhores profissionais da sua região de
+            forma rápida, simples e segura.
           </p>
 
         </div>
 
         <div className="mt-20 grid gap-8 lg:grid-cols-3">
+
           {steps.map((step) => (
             <StepCard
               key={step.number}
@@ -55,6 +59,7 @@ export default function HowItWorks() {
               description={step.description}
             />
           ))}
+
         </div>
 
       </div>

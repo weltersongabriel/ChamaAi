@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import HeroBadge from "./HeroBadge";
-import DashboardMockup from "./DashboardMockup";
+import FeaturedProviders from "../FeaturedProviders";
 
 export default function Hero() {
   const navigate = useNavigate();
@@ -95,7 +95,7 @@ export default function Hero() {
         </div>
 
         <div className="mt-24">
-          <DashboardMockup />
+          <FeaturedProviders />
         </div>
 
       </div>
