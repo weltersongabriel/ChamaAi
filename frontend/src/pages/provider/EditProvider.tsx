@@ -10,6 +10,7 @@ interface Category {
 export default function EditProvider() {
   const navigate = useNavigate();
 
+  const [nome, setNome] = useState("");
   const [bio, setBio] = useState("");
   const [categoryId, setCategoryId] = useState("");
   const [cidade, setCidade] = useState("");
@@ -37,6 +38,7 @@ export default function EditProvider() {
     try {
       const response = await api.get("/providers/me");
 
+      setNome(response.data.nome);
       setBio(response.data.bio);
       setCategoryId(String(response.data.category_id));
       setCidade(response.data.cidade);
@@ -55,6 +57,7 @@ export default function EditProvider() {
 
     try {
       await api.put("/providers/me", {
+        nome,
         bio,
         category_id: Number(categoryId),
         cidade,
@@ -88,6 +91,12 @@ export default function EditProvider() {
         </h1>
 
         <form onSubmit={handleSubmit} className="space-y-5">
+
+          <input
+            value={nome}
+            onChange={(e) => setNome(e.target.value)}
+            className="w-full rounded-lg border border-zinc-700 bg-zinc-800 p-3 text-white"
+          />
 
           <textarea
             value={bio}

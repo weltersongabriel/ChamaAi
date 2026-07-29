@@ -10,6 +10,7 @@ interface Category {
 export default function CreateProvider() {
   const navigate = useNavigate();
 
+  const [nome, setNome] = useState("");
   const [bio, setBio] = useState("");
   const [categoryId, setCategoryId] = useState("");
   const [cidade, setCidade] = useState("");
@@ -40,6 +41,7 @@ export default function CreateProvider() {
 
     try {
       await api.post("/providers", {
+        nome,
         bio,
         category_id: Number(categoryId),
         cidade,
@@ -67,6 +69,20 @@ export default function CreateProvider() {
         </h1>
 
         <form onSubmit={handleSubmit} className="space-y-5">
+
+          <div>
+            <label className="mb-2 block text-sm text-zinc-300">
+              Nome
+            </label>
+
+            <input
+              type="text"
+              value={nome}
+              onChange={(e) => setNome(e.target.value)}
+              required
+              className="w-full rounded-lg border border-zinc-700 bg-zinc-800 p-3 text-white outline-none focus:border-blue-500"
+            />
+          </div>
 
           <div>
             <label className="mb-2 block text-sm text-zinc-300">

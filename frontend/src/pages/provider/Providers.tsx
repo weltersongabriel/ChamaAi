@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 interface Provider {
   id: number;
+  nome: string;
   bio: string;
   categoria: string;
   cidade: string;
@@ -141,6 +142,10 @@ export default function Providers() {
               <div className="flex items-center justify-between">
 
                 <h2 className="text-2xl font-bold text-white">
+                  {provider.nome}
+                </h2>
+
+                <h2 className="text-2xl font-bold text-white">
                   {provider.categoria}
                 </h2>
 
@@ -161,6 +166,10 @@ export default function Providers() {
             <div className="p-6">
 
               <div className="mb-6">
+
+                <p className="text-2xl font-bold text-white">
+                  {provider.nome}
+                </p>
 
                 <p className="line-clamp-3 text-zinc-300">
                   {provider.bio}

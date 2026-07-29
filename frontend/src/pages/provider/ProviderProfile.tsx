@@ -4,6 +4,7 @@ import { api } from "@/services/api";
 
 interface Provider {
   id: number;
+  nome: string;
   bio: string;
   categoria: string;
   cidade: string;
@@ -60,6 +61,10 @@ export default function ProviderProfile() {
         <div className="bg-gradient-to-r from-blue-600 to-blue-500 p-8">
 
           <h1 className="text-4xl font-bold text-white">
+            {provider.nome}
+          </h1>
+
+          <h1 className="text-4xl font-bold text-white">  
             {provider.categoria}
           </h1>
 
