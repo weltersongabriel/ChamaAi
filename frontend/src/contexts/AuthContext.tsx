@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect } from "react";
 
 interface AuthContextData {
   token: string | null;
+  isAuthenticated: boolean;
   signIn: (token: string) => void;
   signOut: () => void;
 }
@@ -14,6 +15,8 @@ export function AuthProvider({
   children: React.ReactNode;
 }) {
   const [token, setToken] = useState<string | null>(null);
+
+  const isAuthenticated = !!token;
 
   useEffect(() => {
     const storedToken = localStorage.getItem("chamaai.token");
@@ -34,7 +37,14 @@ export function AuthProvider({
   }
 
   return (
-    <AuthContext.Provider value={{ token, signIn, signOut }}>
+    <AuthContext.Provider
+      value={{
+        token,
+        isAuthenticated,
+        signIn,
+        signOut,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
