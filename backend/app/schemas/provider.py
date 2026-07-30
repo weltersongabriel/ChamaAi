@@ -1,19 +1,17 @@
 from pydantic import BaseModel
 
+
 class ProviderCreateSchema(BaseModel):
+    nome: str
     bio: str
     category_id: int
     cidade: str
     estado: str
     whatsapp: str
 
+
 class ProviderResponseSchema(ProviderCreateSchema):
     id: int
-    bio: str
-    category_id: int
-    cidade: str
-    estado: str
-    whatsapp: str
     status: str
 
     class Config:
@@ -21,11 +19,13 @@ class ProviderResponseSchema(ProviderCreateSchema):
 
 
 class ProviderUpdateSchema(BaseModel):
+    nome: str
     bio: str
     category_id: int
     cidade: str
     estado: str
     whatsapp: str
+
 
 class ProviderStatusSchema(BaseModel):
     status: str

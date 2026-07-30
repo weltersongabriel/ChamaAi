@@ -27,23 +27,14 @@ router = APIRouter(
     tags=["Providers"])
 
 
-@router.post("/{provider_id}/photo")
-async def upload_photo(
-provider_id: int,
-    file: UploadFile = File(...),
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+@router.get("/{provider_id}")
+async def get_provider_by_id(
+    provider_id: int,
+    db: Session = Depends(get_db)
 ):
-    
     provider = db.query(Provider).filter(
         Provider.id == provider_id
     ).first()
-
-    if provider.user_id != current_user.id:
-        raise HTTPException(
-            status_code=403,
-            detail="Voce não tem permissão para editar este perfil."
-        )
 
     if not provider:
         raise HTTPException(
@@ -51,37 +42,32 @@ provider_id: int,
             detail="Prestador não encontrado"
         )
 
-    filename = f"provider_{provider_id}_{file.filename}"
+    total_reviews = db.query(Review).filter(
+        Review.provider_id == provider.id
+    ).count()
 
-    file_path = os.path.join("uploads", filename)
-    
-    with open(file_path, "wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
+    average_rating = db.query(
+        func.avg(Review.rating)
+    ).filter(
+        Review.provider_id == provider.id
+    ).scalar()
 
-    provider.foto_perfil = file_path
-    db.commit()
-
-    if file.content_type not in [
-        "image/jpeg",
-        "image/png",
-        "image/webp"
-    ]:
-        raise HTTPException(
-            status_code=400,
-            detail="Tipo de arquivo inválido. Apenas imagens são permitidas."
-        )
-    
-    MAX_SIZE = 1 * 1024 * 1024
-
-    if file.size > MAX_SIZE:
-        raise HTTPException(
-            status_code=400,
-            detail="Tamanho do arquivo excede o limite permitido (1MB)."
-        )
+    average_rating = (
+        round(float(average_rating), 1)
+        if average_rating else 0
+    )
 
     return {
-        "message": "Foto enviada com sucesso.",
-        "foto_url": f"/uploads/{filename}"
+        "id": provider.id,
+        "nome": provider.nome,
+        "bio": provider.bio,
+        "categoria": provider.category.name if provider.category else None,
+        "cidade": provider.cidade,
+        "estado": provider.estado,
+        "status": provider.status,
+        "whatsapp": provider.whatsapp,
+        "media_avaliacoes": average_rating,
+        "total_avaliacoes": total_reviews
     }
 
 # @router.post("/")
@@ -95,42 +81,40 @@ provider_id: int,
 async def create_provider(
     data: ProviderCreateSchema,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user) 
+    current_user: User = Depends(get_current_user)
 ):
     # Verificar se a categoria existe
     category = db.query(Category).filter(
         Category.id == data.category_id
     ).first()
-    
+
     if not category:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Categoria não encontrada."
         )
 
-    #Verificar se o usuário já possui perfil
+    # Verificar se o usuário já possui perfil profissional
     existing_provider = db.query(Provider).filter(
-    Provider.user_id == current_user.id
-).first()
-    # existing_provider = db.query(Provider).filter(
-    #     Provider.user_id == current_user.id
-    #     ).first()
-    
+        Provider.user_id == current_user.id
+    ).first()
+
     if existing_provider:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Usuário já possui perfil profissional."
         )
-    
-    #Criar novo perfil profissional
+
+    # Criar perfil profissional
     new_provider = Provider(
         user_id=current_user.id,
-        bio = data.bio,
-        category_id = data.category_id,
-        cidade = data.cidade,
-        estado = data.estado,
-        whatsapp = data.whatsapp,
-        status = "ativo"
+        nome=data.nome,
+        bio=data.bio,
+        category_id=data.category_id,
+        cidade=data.cidade,
+        estado=data.estado,
+        whatsapp=data.whatsapp,
+        status="ativo"
     )
 
     db.add(new_provider)
@@ -141,13 +125,15 @@ async def create_provider(
         "message": "Perfil profissional criado com sucesso.",
         "provider": {
             "id": new_provider.id,
+            "nome": new_provider.nome,
+            "bio": new_provider.bio,
             "category_id": new_provider.category_id,
             "cidade": new_provider.cidade,
             "estado": new_provider.estado,
+            "whatsapp": new_provider.whatsapp,
             "status": new_provider.status
         }
     }
-
 
 @router.get("/")
 async def get_providers(
@@ -187,6 +173,7 @@ async def get_providers(
     "data": [
         {
             "id": provider.id,
+            "nome": provider.user.name,
             "bio": provider.bio,
             "categoria": provider.category.name if provider.category else None,
             "cidade": provider.cidade,
@@ -253,8 +240,9 @@ async def get_provider_by_id(
 
     return {
         "id": provider.id,
+        "nome": provider.user.nome,
         "bio": provider.bio,
-        "categoria": provider.category.name if provider.category else None,
+        "categoria": provider.category.nome if provider.category else None,
         "cidade": provider.cidade,
         "estado": provider.estado,
         "status": provider.status,
@@ -298,6 +286,7 @@ async def update_provider(
             detail="Categoria não encontrada"
         )
 
+    provider.nome = data.nome 
     provider.bio = data.bio
     provider.category_id = data.category_id
     provider.cidade = data.cidade
@@ -311,8 +300,9 @@ async def update_provider(
         "message": "Perfil atualizado com sucesso",
         "provider": {
             "id": provider.id,
+            "nome": provider.nome,
             "bio": provider.bio,
-            "categoria": provider.category.name,
+            "categoria": provider.category.nome,
             "cidade": provider.cidade,
             "estado": provider.estado,
             "whatsapp": provider.whatsapp

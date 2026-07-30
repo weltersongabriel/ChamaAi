@@ -17,6 +17,7 @@ class Provider(Base):
         ForeignKey("users.id"),
         nullable=False,)
     
+    nome = Column(String(30), nullable=False)
     bio = Column(String(500))
     category_id = Column(Integer, ForeignKey("categories.id"))
     category = relationship("Category", back_populates="providers")
@@ -28,4 +29,4 @@ class Provider(Base):
     #Relacionamento com o modelo User
     user = relationship("User", back_populates="provider")
     reviews = relationship("Review", back_populates="provider")
-    favorites = relationship("Favorite", back_populates="provider")
+    favorites = relationship("Favorite", back_populates="provider") 
