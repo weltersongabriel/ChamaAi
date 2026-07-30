@@ -59,12 +59,21 @@ export default function Navbar() {
 
           {isAuthenticated ? (
             <>
-              <Link to="/provider/create">
+              {/* Dashboard */}
+              <Link to="/dashboard">
                 <Button>
+                  Dashboard
+                </Button>
+              </Link>
+
+              {/* Perfil */}
+              <Link to="/provider/create">
+                <Button variant="outline">
                   Meu Perfil
                 </Button>
               </Link>
 
+              {/* Logout */}
               <Button
                 variant="outline"
                 onClick={handleLogout}
@@ -74,12 +83,14 @@ export default function Navbar() {
             </>
           ) : (
             <>
+              {/* Login */}
               <Link to="/login">
                 <Button variant="outline">
                   Entrar
                 </Button>
               </Link>
 
+              {/* Cadastro */}
               <Link to="/register">
                 <Button>
                   Criar Conta
