@@ -9,6 +9,7 @@ import Providers from "@/pages/provider/Providers";
 import ProviderProfile from "@/pages/provider/ProviderProfile";
 import CreateProvider from "@/pages/provider/CreateProvider";
 import EditProvider from "@/pages/provider/EditProvider";
+import Favorites from "@/pages/favorites/Favorites";
 
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 
@@ -58,6 +59,15 @@ export default function AppRoutes() {
         element={
           <ProtectedRoute>
             <EditProvider />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/favorites"
+        element={
+          <ProtectedRoute>
+            <Favorites />
           </ProtectedRoute>
         }
       />

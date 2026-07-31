@@ -1,8 +1,77 @@
-import { Search, Heart, Star, User, ArrowRight } from "lucide-react";
+import { useEffect, useState } from "react";
+import {
+  Search,
+  Heart,
+  Star,
+  User,
+  ArrowRight,
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { api } from "@/services/api";
+
+interface UserData {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+}
+
+interface Favorite {
+  favorite_id: number;
+  provider_id: number;
+  categoria: string | null;
+  cidade: string;
+  estado: string;
+  status: string;
+}
+
+interface Review {
+  id: number;
+  provider_id: number;
+  rating: number;
+  comment: string;
+}
 
 export default function Dashboard() {
   const navigate = useNavigate();
+
+  const [user, setUser] = useState<UserData | null>(null);
+  const [favorites, setFavorites] = useState<Favorite[]>([]);
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadDashboard();
+  }, []);
+
+  async function loadDashboard() {
+    try {
+      const [userResponse, favoritesResponse, reviewsResponse] =
+        await Promise.all([
+          api.get("/auth/me"),
+          api.get("/favorites/"),
+          api.get("/reviews/me"),
+        ]);
+
+      setUser(userResponse.data);
+      setFavorites(favoritesResponse.data);
+      setReviews(reviewsResponse.data);
+    } catch (error) {
+      console.error("Erro ao carregar dashboard:", error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-zinc-950">
+        <p className="text-zinc-400">
+          Carregando dashboard...
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-zinc-950 px-6 py-10">
@@ -17,7 +86,7 @@ export default function Dashboard() {
           </p>
 
           <h1 className="mt-2 text-4xl font-bold text-white">
-            Olá! 👋
+            Olá, {user?.name || "usuário"}! 👋
           </h1>
 
           <p className="mt-3 text-zinc-400">
@@ -36,11 +105,14 @@ export default function Dashboard() {
             <div className="flex items-center justify-between">
 
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-red-500/10">
-                <Heart className="text-red-400" size={24} />
+                <Heart
+                  className="text-red-400"
+                  size={24}
+                />
               </div>
 
               <span className="text-3xl font-bold text-white">
-                0
+                {favorites.length}
               </span>
 
             </div>
@@ -61,11 +133,14 @@ export default function Dashboard() {
             <div className="flex items-center justify-between">
 
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-yellow-500/10">
-                <Star className="text-yellow-400" size={24} />
+                <Star
+                  className="text-yellow-400"
+                  size={24}
+                />
               </div>
 
               <span className="text-3xl font-bold text-white">
-                0
+                {reviews.length}
               </span>
 
             </div>
@@ -86,7 +161,10 @@ export default function Dashboard() {
             <div className="flex items-center justify-between">
 
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-500/10">
-                <User className="text-blue-400" size={24} />
+                <User
+                  className="text-blue-400"
+                  size={24}
+                />
               </div>
 
               <span className="text-sm font-medium text-green-400">
@@ -100,7 +178,7 @@ export default function Dashboard() {
             </h2>
 
             <p className="mt-2 text-sm text-zinc-400">
-              Gerencie seus dados pessoais.
+              {user?.email}
             </p>
 
           </div>
@@ -116,7 +194,7 @@ export default function Dashboard() {
 
           <div className="mt-5 grid gap-4 md:grid-cols-2">
 
-            {/* Buscar */}
+            {/* Buscar profissionais */}
             <button
               onClick={() => navigate("/providers")}
               className="group flex items-center justify-between rounded-2xl border border-zinc-800 bg-zinc-900 p-6 text-left transition hover:border-blue-500/50 hover:bg-zinc-900/80"
@@ -125,7 +203,10 @@ export default function Dashboard() {
               <div className="flex items-center gap-4">
 
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-500/10">
-                  <Search className="text-blue-400" size={24} />
+                  <Search
+                    className="text-blue-400"
+                    size={24}
+                  />
                 </div>
 
                 <div>
@@ -151,13 +232,17 @@ export default function Dashboard() {
 
             {/* Favoritos */}
             <button
+              onClick={() => navigate("/favorites")}
               className="group flex items-center justify-between rounded-2xl border border-zinc-800 bg-zinc-900 p-6 text-left transition hover:border-red-500/30 hover:bg-zinc-900/80"
             >
 
               <div className="flex items-center gap-4">
 
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-red-500/10">
-                  <Heart className="text-red-400" size={24} />
+                  <Heart
+                    className="text-red-400"
+                    size={24}
+                  />
                 </div>
 
                 <div>
