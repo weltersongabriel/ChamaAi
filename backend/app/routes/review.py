@@ -58,6 +58,26 @@ async def create_review(
     return {"message": "Avaliação criada com sucesso.", "review": new_review}
 
 
+@router.get("/me")
+async def get_my_reviews(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    reviews = db.query(Review).filter(
+        Review.user_id == current_user.id
+    ).all()
+
+    return [
+        {
+            "id": review.id,
+            "provider_id": review.provider_id,
+            "rating": review.rating,
+            "comment": review.comment,
+        }
+        for review in reviews
+    ]
+
+
 @router.get("/provider/{provider_id}")
 async def get_reviews_by_provider(
     provider_id: int,

@@ -63,20 +63,21 @@ async def list_favorites(
     ).all()
     
     return [
-        {
-            "favorite_id": favorite.id,
-            "provider_id": favorite.provider_id,
-            "categoria": (
-                favorite.provider.category.name
-                if favorite.provider.category
-                else None
-            ),
-            "cidade": favorite.provider.cidade,
-            "estado": favorite.provider.estado,
-            "status": favorite.provider.status,
-        }
-        for favorite in favorites
-    ]
+    {
+        "favorite_id": favorite.id,
+        "provider_id": favorite.provider_id,
+        "nome": favorite.provider.user.name,
+        "categoria": (
+            favorite.provider.category.name
+            if favorite.provider.category
+            else None
+        ),
+        "cidade": favorite.provider.cidade,
+        "estado": favorite.provider.estado,
+        "status": favorite.provider.status,
+    }
+    for favorite in favorites
+]
 
 
 @router.delete("/{favorite_id}")
