@@ -3,10 +3,30 @@ import { Link, useNavigate } from "react-router-dom";
 import Button from "@/components/ui/Button";
 import chama from "@/assets/chama.png";
 import { useAuth } from "@/contexts/AuthContext";
+import { api } from "@/services/api";
 
 export default function Navbar() {
   const { isAuthenticated, signOut } = useAuth();
   const navigate = useNavigate();
+
+  async function handleMyProfile() {
+    try {
+      const response = await api.get("/providers/me");
+
+      // Usuário já possui perfil profissional
+      navigate(`/provider/${response.data.id}/edit`);
+
+    } catch (error: any) {
+      // Usuário ainda não possui perfil profissional
+      if (error.response?.status === 404) {
+        navigate("/provider/create");
+        return;
+      }
+
+      console.error("Erro ao verificar perfil profissional:", error);
+      alert("Não foi possível verificar seu perfil.");
+    }
+  }
 
   function handleLogout() {
     signOut();
@@ -44,12 +64,12 @@ export default function Navbar() {
           </Link>
 
           {isAuthenticated && (
-            <Link
-              to="/provider/create"
+            <button
+              onClick={handleMyProfile}
               className="text-zinc-300 transition hover:text-blue-400"
             >
               Sou Prestador
-            </Link>
+            </button>
           )}
 
         </nav>
@@ -66,12 +86,13 @@ export default function Navbar() {
                 </Button>
               </Link>
 
-              {/* Perfil */}
-              <Link to="/provider/create">
-                <Button variant="outline">
-                  Meu Perfil
-                </Button>
-              </Link>
+              {/* Meu Perfil */}
+              <Button
+                variant="outline"
+                onClick={handleMyProfile}
+              >
+                Meu Perfil
+              </Button>
 
               {/* Logout */}
               <Button

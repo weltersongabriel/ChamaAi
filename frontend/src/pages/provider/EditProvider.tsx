@@ -10,6 +10,8 @@ interface Category {
 export default function EditProvider() {
   const navigate = useNavigate();
 
+  const [providerId, setProviderId] = useState<number | null>(null);
+
   const [nome, setNome] = useState("");
   const [bio, setBio] = useState("");
   const [categoryId, setCategoryId] = useState("");
@@ -19,6 +21,7 @@ export default function EditProvider() {
 
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     loadCategories();
@@ -30,7 +33,7 @@ export default function EditProvider() {
       const response = await api.get("/categories");
       setCategories(response.data);
     } catch (error) {
-      console.error(error);
+      console.error("Erro ao carregar categorias:", error);
     }
   }
 
@@ -38,6 +41,7 @@ export default function EditProvider() {
     try {
       const response = await api.get("/providers/me");
 
+      setProviderId(response.data.id);
       setNome(response.data.nome);
       setBio(response.data.bio);
       setCategoryId(String(response.data.category_id));
@@ -45,7 +49,7 @@ export default function EditProvider() {
       setEstado(response.data.estado);
       setWhatsapp(response.data.whatsapp);
     } catch (error) {
-      console.error(error);
+      console.error("Erro ao carregar perfil:", error);
       alert("Erro ao carregar perfil.");
     } finally {
       setLoading(false);
@@ -55,8 +59,15 @@ export default function EditProvider() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
+    if (!providerId) {
+      alert("Perfil profissional não encontrado.");
+      return;
+    }
+
+    setSaving(true);
+
     try {
-      await api.put("/providers/me", {
+      await api.put(`/providers/${providerId}`, {
         nome,
         bio,
         category_id: Number(categoryId),
@@ -67,17 +78,21 @@ export default function EditProvider() {
 
       alert("Perfil atualizado com sucesso!");
 
-      navigate("/providers");
+      navigate(`/providers/${providerId}`);
     } catch (error) {
-      console.error(error);
+      console.error("Erro ao atualizar perfil:", error);
       alert("Erro ao atualizar perfil.");
+    } finally {
+      setSaving(false);
     }
   }
 
   if (loading) {
     return (
-      <div className="flex justify-center py-20 text-white">
-        Carregando...
+      <div className="flex min-h-screen items-center justify-center bg-zinc-950">
+        <p className="text-zinc-400">
+          Carregando perfil...
+        </p>
       </div>
     );
   }
@@ -92,54 +107,113 @@ export default function EditProvider() {
 
         <form onSubmit={handleSubmit} className="space-y-5">
 
-          <input
-            value={nome}
-            onChange={(e) => setNome(e.target.value)}
-            className="w-full rounded-lg border border-zinc-700 bg-zinc-800 p-3 text-white"
-          />
+          <div>
+            <label className="mb-2 block text-sm text-zinc-300">
+              Nome
+            </label>
 
-          <textarea
-            value={bio}
-            onChange={(e) => setBio(e.target.value)}
-            rows={4}
-            className="w-full rounded-lg border border-zinc-700 bg-zinc-800 p-3 text-white"
-          />
+            <input
+              type="text"
+              value={nome}
+              onChange={(e) => setNome(e.target.value)}
+              required
+              className="w-full rounded-lg border border-zinc-700 bg-zinc-800 p-3 text-white outline-none focus:border-blue-500"
+            />
+          </div>
 
-          <select
-            value={categoryId}
-            onChange={(e) => setCategoryId(e.target.value)}
-            className="w-full rounded-lg border border-zinc-700 bg-zinc-800 p-3 text-white"
-          >
-            {categories.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.name}
+          <div>
+            <label className="mb-2 block text-sm text-zinc-300">
+              Bio
+            </label>
+
+            <textarea
+              value={bio}
+              onChange={(e) => setBio(e.target.value)}
+              required
+              rows={4}
+              className="w-full rounded-lg border border-zinc-700 bg-zinc-800 p-3 text-white outline-none focus:border-blue-500"
+            />
+          </div>
+
+          <div>
+            <label className="mb-2 block text-sm text-zinc-300">
+              Categoria
+            </label>
+
+            <select
+              value={categoryId}
+              onChange={(e) => setCategoryId(e.target.value)}
+              required
+              className="w-full rounded-lg border border-zinc-700 bg-zinc-800 p-3 text-white outline-none focus:border-blue-500"
+            >
+              <option value="">
+                Selecione...
               </option>
-            ))}
-          </select>
 
-          <input
-            value={cidade}
-            onChange={(e) => setCidade(e.target.value)}
-            className="w-full rounded-lg border border-zinc-700 bg-zinc-800 p-3 text-white"
-          />
+              {categories.map((category) => (
+                <option
+                  key={category.id}
+                  value={category.id}
+                >
+                  {category.name}
+                </option>
+              ))}
+            </select>
+          </div>
 
-          <input
-            value={estado}
-            onChange={(e) => setEstado(e.target.value)}
-            className="w-full rounded-lg border border-zinc-700 bg-zinc-800 p-3 text-white"
-          />
+          <div>
+            <label className="mb-2 block text-sm text-zinc-300">
+              Cidade
+            </label>
 
-          <input
-            value={whatsapp}
-            onChange={(e) => setWhatsapp(e.target.value)}
-            className="w-full rounded-lg border border-zinc-700 bg-zinc-800 p-3 text-white"
-          />
+            <input
+              type="text"
+              value={cidade}
+              onChange={(e) => setCidade(e.target.value)}
+              required
+              className="w-full rounded-lg border border-zinc-700 bg-zinc-800 p-3 text-white outline-none focus:border-blue-500"
+            />
+          </div>
+
+          <div>
+            <label className="mb-2 block text-sm text-zinc-300">
+              Estado
+            </label>
+
+            <input
+              type="text"
+              value={estado}
+              onChange={(e) => setEstado(e.target.value.toUpperCase())}
+              required
+              maxLength={2}
+              placeholder="BA"
+              className="w-full rounded-lg border border-zinc-700 bg-zinc-800 p-3 uppercase text-white outline-none focus:border-blue-500"
+            />
+          </div>
+
+          <div>
+            <label className="mb-2 block text-sm text-zinc-300">
+              WhatsApp
+            </label>
+
+            <input
+              type="text"
+              value={whatsapp}
+              onChange={(e) => setWhatsapp(e.target.value)}
+              required
+              placeholder="5577999999999"
+              className="w-full rounded-lg border border-zinc-700 bg-zinc-800 p-3 text-white outline-none focus:border-blue-500"
+            />
+          </div>
 
           <button
             type="submit"
-            className="w-full rounded-lg bg-blue-600 py-3 font-semibold text-white hover:bg-blue-700"
+            disabled={saving}
+            className="w-full rounded-lg bg-blue-600 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            Salvar Alterações
+            {saving
+              ? "Salvando..."
+              : "Salvar Alterações"}
           </button>
 
         </form>
