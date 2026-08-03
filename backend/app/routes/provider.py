@@ -27,19 +27,19 @@ router = APIRouter(
     tags=["Providers"])
 
 
-@router.get("/{provider_id}")
-async def get_provider_by_id(
-    provider_id: int,
-    db: Session = Depends(get_db)
+@router.get("/me")
+async def get_my_provider(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
 ):
     provider = db.query(Provider).filter(
-        Provider.id == provider_id
+        Provider.user_id == current_user.id
     ).first()
 
     if not provider:
         raise HTTPException(
             status_code=404,
-            detail="Prestador não encontrado"
+            detail="Você ainda não possui um perfil profissional."
         )
 
     total_reviews = db.query(Review).filter(
@@ -61,11 +61,16 @@ async def get_provider_by_id(
         "id": provider.id,
         "nome": provider.nome,
         "bio": provider.bio,
-        "categoria": provider.category.name if provider.category else None,
+        "category_id": provider.category_id,
+        "categoria": (
+            provider.category.name
+            if provider.category
+            else None
+        ),
         "cidade": provider.cidade,
         "estado": provider.estado,
-        "status": provider.status,
         "whatsapp": provider.whatsapp,
+        "status": provider.status,
         "media_avaliacoes": average_rating,
         "total_avaliacoes": total_reviews
     }
