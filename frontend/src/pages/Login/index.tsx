@@ -1,17 +1,18 @@
 import MainLayout from "@/layouts/MainLayout";
-import AuthHeader from "@/components/auth/AuthHeader";
 import AuthCard from "@/components/auth/AuthCard";
+import AuthHeader from "@/components/auth/AuthHeader";
 import LoginForm from "@/components/auth/LoginForm";
 
 export default function Login() {
   return (
-     <MainLayout>
+    <MainLayout>
+      <section className="relative flex min-h-[calc(100vh-64px)] items-center justify-center overflow-hidden bg-[#09090B] px-4 py-10 sm:px-6 sm:py-12">
 
-      <section className="relative flex min-h-[calc(100vh-80px)] items-center justify-center overflow-hidden bg-[#09090B] px-6">
+        {/* Glow */}
+        <div className="absolute left-1/2 top-16 h-64 w-64 -translate-x-1/2 rounded-full bg-blue-600/20 blur-[100px] sm:top-24 sm:h-[420px] sm:w-[420px] sm:blur-[140px]" />
 
-        <div className="absolute left-1/2 top-24 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-blue-600/20 blur-[140px]" />
-
-        <div className="w-full max-w-md">
+        {/* Card */}
+        <div className="relative z-10 w-full max-w-md">
 
           <AuthCard>
 
@@ -27,7 +28,6 @@ export default function Login() {
         </div>
 
       </section>
-
     </MainLayout>
   );
 }

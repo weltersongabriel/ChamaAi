@@ -1,4 +1,6 @@
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { Menu, X } from "lucide-react";
 
 import Button from "@/components/ui/Button";
 import chama from "@/assets/chama.png";
@@ -9,15 +11,16 @@ export default function Navbar() {
   const { isAuthenticated, signOut } = useAuth();
   const navigate = useNavigate();
 
+  const [menuOpen, setMenuOpen] = useState(false);
+
   async function handleMyProfile() {
+    setMenuOpen(false);
+
     try {
       const response = await api.get("/providers/me");
 
-      // Usuário já possui perfil profissional
       navigate(`/provider/${response.data.id}/edit`);
-
     } catch (error: any) {
-      // Usuário ainda não possui perfil profissional
       if (error.response?.status === 404) {
         navigate("/provider/create");
         return;
@@ -29,24 +32,34 @@ export default function Navbar() {
   }
 
   function handleLogout() {
+    setMenuOpen(false);
     signOut();
     navigate("/");
   }
 
+  function closeMenu() {
+    setMenuOpen(false);
+  }
+
   return (
     <header className="sticky top-0 z-50 border-b border-zinc-800 bg-zinc-950/80 backdrop-blur">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
+
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
 
         {/* Logo */}
-        <Link to="/" className="flex items-center">
+        <Link
+          to="/"
+          onClick={closeMenu}
+          className="flex items-center"
+        >
           <img
             src={chama}
             alt="Logo Chama Aí"
-            className="h-12 w-auto"
+            className="h-11 w-auto sm:h-12"
           />
         </Link>
 
-        {/* Menu */}
+        {/* Menu Desktop */}
         <nav className="hidden items-center gap-8 md:flex">
 
           <Link
@@ -74,19 +87,17 @@ export default function Navbar() {
 
         </nav>
 
-        {/* Botões */}
-        <div className="flex items-center gap-3">
+        {/* Botões Desktop */}
+        <div className="hidden items-center gap-3 md:flex">
 
           {isAuthenticated ? (
             <>
-              {/* Dashboard */}
               <Link to="/dashboard">
                 <Button>
                   Dashboard
                 </Button>
               </Link>
 
-              {/* Meu Perfil */}
               <Button
                 variant="outline"
                 onClick={handleMyProfile}
@@ -94,7 +105,6 @@ export default function Navbar() {
                 Meu Perfil
               </Button>
 
-              {/* Logout */}
               <Button
                 variant="outline"
                 onClick={handleLogout}
@@ -104,14 +114,12 @@ export default function Navbar() {
             </>
           ) : (
             <>
-              {/* Login */}
               <Link to="/login">
                 <Button variant="outline">
                   Entrar
                 </Button>
               </Link>
 
-              {/* Cadastro */}
               <Link to="/register">
                 <Button>
                   Criar Conta
@@ -122,7 +130,108 @@ export default function Navbar() {
 
         </div>
 
+        {/* Botão Mobile */}
+        <button
+          onClick={() => setMenuOpen(!menuOpen)}
+          className="rounded-lg p-2 text-zinc-300 transition hover:bg-zinc-800 hover:text-white md:hidden"
+          aria-label={menuOpen ? "Fechar menu" : "Abrir menu"}
+        >
+          {menuOpen ? (
+            <X size={26} />
+          ) : (
+            <Menu size={26} />
+          )}
+        </button>
+
       </div>
+
+      {/* Menu Mobile */}
+      {menuOpen && (
+        <div className="border-t border-zinc-800 bg-zinc-950 px-4 py-5 md:hidden">
+
+          <nav className="flex flex-col gap-2">
+
+            <Link
+              to="/"
+              onClick={closeMenu}
+              className="rounded-lg px-4 py-3 text-zinc-300 transition hover:bg-zinc-900 hover:text-blue-400"
+            >
+              Início
+            </Link>
+
+            <Link
+              to="/providers"
+              onClick={closeMenu}
+              className="rounded-lg px-4 py-3 text-zinc-300 transition hover:bg-zinc-900 hover:text-blue-400"
+            >
+              Profissionais
+            </Link>
+
+            {isAuthenticated && (
+              <>
+                <button
+                  onClick={handleMyProfile}
+                  className="rounded-lg px-4 py-3 text-left text-zinc-300 transition hover:bg-zinc-900 hover:text-blue-400"
+                >
+                  Sou Prestador
+                </button>
+
+                <Link
+                  to="/dashboard"
+                  onClick={closeMenu}
+                  className="rounded-lg px-4 py-3 text-zinc-300 transition hover:bg-zinc-900 hover:text-blue-400"
+                >
+                  Dashboard
+                </Link>
+
+                <button
+                  onClick={handleMyProfile}
+                  className="rounded-lg px-4 py-3 text-left text-zinc-300 transition hover:bg-zinc-900 hover:text-blue-400"
+                >
+                  Meu Perfil
+                </button>
+
+                <button
+                  onClick={handleLogout}
+                  className="rounded-lg px-4 py-3 text-left text-zinc-300 transition hover:bg-zinc-900 hover:text-red-400"
+                >
+                  Sair
+                </button>
+              </>
+            )}
+
+            {!isAuthenticated && (
+              <div className="mt-3 grid gap-3 border-t border-zinc-800 pt-4">
+
+                <Link
+                  to="/login"
+                  onClick={closeMenu}
+                >
+                  <Button
+                    variant="outline"
+                    className="w-full"
+                  >
+                    Entrar
+                  </Button>
+                </Link>
+
+                <Link
+                  to="/register"
+                  onClick={closeMenu}
+                >
+                  <Button className="w-full">
+                    Criar Conta
+                  </Button>
+                </Link>
+
+              </div>
+            )}
+
+          </nav>
+
+        </div>
+      )}
+
     </header>
   );
 }

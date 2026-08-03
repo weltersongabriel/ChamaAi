@@ -27,23 +27,28 @@ export default function Hero() {
   return (
     <section className="relative overflow-hidden bg-zinc-950">
 
-      <div className="absolute left-1/2 top-24 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-blue-600/20 blur-[140px]" />
+      {/* Glow central */}
+      <div className="absolute left-1/2 top-20 h-72 w-72 -translate-x-1/2 rounded-full bg-blue-600/20 blur-[110px] sm:h-[420px] sm:w-[420px] sm:blur-[140px]" />
 
-      <div className="absolute right-0 top-0 h-80 w-80 rounded-full bg-blue-500/10 blur-[120px]" />
+      {/* Glow lateral */}
+      <div className="absolute right-0 top-0 h-48 w-48 rounded-full bg-blue-500/10 blur-[90px] sm:h-80 sm:w-80 sm:blur-[120px]" />
 
+      {/* Gradiente */}
       <div className="absolute inset-0 -z-10 bg-gradient-to-b from-blue-950/30 via-zinc-950 to-zinc-950" />
 
-      <div className="relative z-10 mx-auto flex min-h-[calc(100vh-80px)] max-w-7xl flex-col items-center justify-center px-6 py-24">
+      <div className="relative z-10 mx-auto flex min-h-[calc(100vh-64px)] max-w-7xl flex-col items-center justify-center px-4 py-16 sm:px-6 sm:py-24">
 
-        <div className="mx-auto max-w-4xl text-center">
+        <div className="mx-auto w-full max-w-4xl text-center">
 
+          {/* Badge */}
           <HeroBadge />
 
-          <h1 className="mt-8 text-5xl font-extrabold leading-tight tracking-tight text-white md:text-6xl lg:text-7xl">
+          {/* Título */}
+          <h1 className="mt-6 text-4xl font-extrabold leading-tight tracking-tight text-white sm:mt-8 sm:text-5xl md:text-6xl lg:text-7xl">
 
-            Encontre o profissional ideal
+            Encontre o profissional ideal{" "}
 
-            <br />
+            <br className="hidden sm:block" />
 
             <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
               com o Chama Aí
@@ -51,7 +56,8 @@ export default function Hero() {
 
           </h1>
 
-          <p className="mx-auto mt-8 max-w-3xl text-lg leading-8 text-zinc-400">
+          {/* Descrição */}
+          <p className="mx-auto mt-6 max-w-3xl px-2 text-base leading-7 text-zinc-400 sm:mt-8 sm:px-0 sm:text-lg sm:leading-8">
 
             Encontre pedreiros, eletricistas, pintores,
             diaristas, encanadores e diversos profissionais
@@ -59,9 +65,10 @@ export default function Hero() {
 
           </p>
 
-          <div className="mx-auto mt-12 max-w-5xl rounded-3xl border border-zinc-800 bg-zinc-900/80 p-6 backdrop-blur">
+          {/* Busca */}
+          <div className="mx-auto mt-8 w-full max-w-5xl rounded-2xl border border-zinc-800 bg-zinc-900/80 p-4 backdrop-blur sm:mt-12 sm:rounded-3xl sm:p-6">
 
-            <div className="grid gap-4 md:grid-cols-3">
+            <div className="grid gap-3 sm:gap-4 md:grid-cols-3">
 
               <input
                 type="text"
@@ -69,7 +76,7 @@ export default function Hero() {
                 value={categoria}
                 onChange={(e) => setCategoria(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                className="rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-white placeholder:text-zinc-500 outline-none focus:border-blue-500"
+                className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white placeholder:text-zinc-500 outline-none transition focus:border-blue-500 sm:text-base"
               />
 
               <input
@@ -78,12 +85,12 @@ export default function Hero() {
                 value={cidade}
                 onChange={(e) => setCidade(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                className="rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-white placeholder:text-zinc-500 outline-none focus:border-blue-500"
+                className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white placeholder:text-zinc-500 outline-none transition focus:border-blue-500 sm:text-base"
               />
 
               <button
                 onClick={handleSearch}
-                className="rounded-xl bg-blue-600 px-6 py-3 font-semibold text-white transition hover:bg-blue-700"
+                className="w-full rounded-xl bg-blue-600 px-6 py-3 font-semibold text-white transition hover:bg-blue-700 active:scale-[0.98]"
               >
                 Buscar profissionais
               </button>
@@ -94,7 +101,8 @@ export default function Hero() {
 
         </div>
 
-        <div className="mt-24">
+        {/* Profissionais em destaque */}
+        <div className="mt-16 w-full sm:mt-24">
           <FeaturedProviders />
         </div>
 
