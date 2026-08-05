@@ -245,9 +245,9 @@ async def get_provider_by_id(
 
     return {
         "id": provider.id,
-        "nome": provider.user.nome,
+        "nome": provider.user.name,
         "bio": provider.bio,
-        "categoria": provider.category.nome if provider.category else None,
+        "categoria": provider.category.name if provider.category else None,
         "cidade": provider.cidade,
         "estado": provider.estado,
         "status": provider.status,
