@@ -1,14 +1,13 @@
+import heroImage from "../../../assets/chama-ai-hero.png";
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-import HeroBadge from "./HeroBadge";
-import FeaturedProviders from "../FeaturedProviders";
 
 export default function Hero() {
   const navigate = useNavigate();
 
-  const [categoria, setCategoria] = useState("");
-  const [cidade, setCidade] = useState("");
+  const [categoria] = useState("");
+  const [cidade] = useState("");
 
   function handleSearch() {
     const params = new URLSearchParams();
@@ -25,89 +24,188 @@ export default function Hero() {
   }
 
   return (
-    <section className="relative overflow-hidden bg-zinc-950">
+    <section className="relative min-h-[calc(100vh-80px)] overflow-hidden bg-[#050B1C]">
+      {/* Background */}
+      <div className="absolute inset-0 bg-black" />
 
-      {/* Glow central */}
-      <div className="absolute left-1/2 top-20 h-72 w-72 -translate-x-1/2 rounded-full bg-blue-600/20 blur-[110px] sm:h-[420px] sm:w-[420px] sm:blur-[140px]" />
+      {/* Decorative glow */}
+      <div className="absolute -right-40 top-20 h-[500px] w-[700px] rounded-full bg-[#3154C8]/20 blur-3xl" />
+      <div className="absolute -left-40 bottom-0 h-[400px] w-[600px] rounded-full bg-[#3154C8]/15 blur-3xl" />
 
-      {/* Glow lateral */}
-      <div className="absolute right-0 top-0 h-48 w-48 rounded-full bg-blue-500/10 blur-[90px] sm:h-80 sm:w-80 sm:blur-[120px]" />
+      <div className="relative mx-auto flex min-h-[calc(100vh-80px)] max-w-7xl items-center px-6 py-10 sm:px-8 lg:px-8 lg:py-16">
 
-      {/* Gradiente */}
-      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-blue-950/30 via-zinc-950 to-zinc-950" />
+        <div className="grid w-full items-center gap-8 lg:grid-cols-2 lg:gap-12">
 
-      <div className="relative z-10 mx-auto flex min-h-[calc(100vh-64px)] max-w-7xl flex-col items-center justify-center px-4 py-16 sm:px-6 sm:py-24">
+          {/* ========================= */}
+          {/* TEXT - DESKTOP/TABLET */}
+          {/* ========================= */}
 
-        <div className="mx-auto w-full max-w-4xl text-center">
+          <div className="hidden max-w-2xl lg:block">
 
-          {/* Badge */}
-          <HeroBadge />
+            {/* Badge */}
+            <div className="animate-fade-up mb-5 inline-flex items-center rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-white/80 backdrop-blur-sm">
+              Profissionais de confiança
+            </div>
 
-          {/* Título */}
-          <h1 className="mt-6 text-4xl font-extrabold leading-tight tracking-tight text-white sm:mt-8 sm:text-5xl md:text-6xl lg:text-7xl">
+            {/* Title */}
+            <h1
+              className="
+                animate-fade-up
+                text-5xl
+                font-extrabold
+                leading-[1.05]
+                tracking-tight
+                text-white
+                xl:text-7xl
+              "
+            >
+              Encontre o profissional ideal com o{" "}
+              <span className="text-[#3D6BFF]">Chama Aí</span>
+            </h1>
 
-            Encontre o profissional ideal{" "}
+            {/* Description */}
+            <p
+              className="
+                animate-fade-up
+                animation-delay-200
+                mt-5
+                max-w-xl
+                text-lg
+                leading-8
+                text-white/70
+              "
+            >
+              Serviços de confiança, perto de você e de forma simples.
+            </p>
 
-            <br className="hidden sm:block" />
-
-            <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
-              com o Chama Aí
-            </span>
-
-          </h1>
-
-          {/* Descrição */}
-          <p className="mx-auto mt-6 max-w-3xl px-2 text-base leading-7 text-zinc-400 sm:mt-8 sm:px-0 sm:text-lg sm:leading-8">
-
-            Encontre pedreiros, eletricistas, pintores,
-            diaristas, encanadores e diversos profissionais
-            próximos de você de forma rápida e segura.
-
-          </p>
-
-          {/* Busca */}
-          <div className="mx-auto mt-8 w-full max-w-5xl rounded-2xl border border-zinc-800 bg-zinc-900/80 p-4 backdrop-blur sm:mt-12 sm:rounded-3xl sm:p-6">
-
-            <div className="grid gap-3 sm:gap-4 md:grid-cols-3">
-
-              <input
-                type="text"
-                placeholder="Categoria (Ex: Pedreiro)"
-                value={categoria}
-                onChange={(e) => setCategoria(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white placeholder:text-zinc-500 outline-none transition focus:border-blue-500 sm:text-base"
-              />
-
-              <input
-                type="text"
-                placeholder="Cidade"
-                value={cidade}
-                onChange={(e) => setCidade(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white placeholder:text-zinc-500 outline-none transition focus:border-blue-500 sm:text-base"
-              />
-
+            {/* Button */}
+            <div className="animate-fade-up animation-delay-300 mt-7">
               <button
                 onClick={handleSearch}
-                className="w-full rounded-xl bg-blue-600 px-6 py-3 font-semibold text-white transition hover:bg-blue-700 active:scale-[0.98]"
+                className="
+                  rounded-xl
+                  bg-blue-600
+                  px-7
+                  py-3.5
+                  font-semibold
+                  text-white
+                  transition
+                  hover:bg-blue-700
+                  active:scale-[0.98]
+                "
               >
                 Buscar profissionais
               </button>
-
             </div>
 
           </div>
 
-        </div>
+          {/* ========================= */}
+          {/* MOBILE */}
+          {/* ========================= */}
 
-        {/* Profissionais em destaque */}
-        <div className="mt-16 w-full sm:mt-24">
-          <FeaturedProviders />
-        </div>
+          <div className="flex flex-col items-center lg:hidden">
 
+            {/* Title */}
+            <h1
+              className="
+                animate-fade-up
+                text-2xl
+                font-extrabold
+                leading-[1.05]
+                tracking-tight
+                text-white
+                xl:text-5xl
+              "
+            >
+              Encontre profissionais com o{" "}
+              <span className="text-[#3D6BFF]">Chama Aí</span>
+            </h1>
+
+            {/* 3D Image */}
+            <div className="animate-fade-in flex w-full justify-center">
+              <img
+                src={heroImage}
+                alt="Encontre profissionais pelo Chama Aí"
+                className="
+                  w-[95%]
+                  max-w-[380px]
+                  object-contain
+                  drop-shadow-2xl
+                "
+              />
+            </div>
+
+            {/* Search Button */}
+            <button
+              onClick={handleSearch}
+              className="
+                animate-fade-up
+                animation-delay-200
+                mt-5
+                w-full
+                max-w-[320px]
+                rounded-xl
+                bg-blue-600
+                px-6
+                py-3.5
+                font-semibold
+                text-white
+                shadow-lg
+                shadow-blue-600/20
+                transition
+                hover:bg-blue-700
+                active:scale-[0.98]
+              "
+            >
+              Buscar profissionais
+            </button>
+
+            <button
+              onClick={() => navigate("/login")}
+              className="
+                animate-fade-up
+                animation-delay-300
+                mt-4
+                w-full
+                max-w-[320px]
+                rounded-xl
+                bg-white
+                px-6
+                py-3.5
+                font-semibold
+                text-blue-600
+                shadow-lg
+                shadow-blue-600/20
+                transition
+                hover:bg-blue-100
+                active:scale-[0.98]
+              "
+            >
+              Fazer login
+            </button>
+
+          </div>
+
+          {/* ========================= */}
+          {/* DESKTOP IMAGE */}
+          {/* ========================= */}
+
+          <div className="hidden animate-fade-in justify-center lg:flex lg:justify-end">
+            <img
+              src={heroImage}
+              alt="Encontre profissionais pelo Chama Aí"
+              className="
+                w-full
+                max-w-xl
+                object-contain
+                drop-shadow-2xl
+              "
+            />
+          </div>
+
+        </div>
       </div>
-
     </section>
   );
 }

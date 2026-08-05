@@ -29,9 +29,9 @@ export default function AppRoutes() {
       />
 
       <Route
-        path="/providers/:id"
-        element={<ProviderProfile />}
-      />
+      path="/providers/:id"
+      element={<ProviderProfile />}
+    />
 
       {/* Dashboard */}
       <Route
