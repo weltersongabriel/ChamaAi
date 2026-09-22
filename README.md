@@ -19,6 +19,11 @@
   <img src="https://img.shields.io/badge/database-MySQL-4479A1?style=for-the-badge"/>
 </p>
 
+<p align="center">
+  🌐 <strong>Acesse o projeto (Frontend):</strong> <a href="https://chama-ai-wg.vercel.app/" target="_blank">Clique aqui para ver a aplicação</a><br/>
+  <sub><em>Nota: O link acima contém a demonstração da interface (frontend) da aplicação.</em></sub>
+</p>
+
 ---
 
 ## 📸 Sobre o projeto
