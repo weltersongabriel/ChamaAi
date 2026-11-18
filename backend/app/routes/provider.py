@@ -307,7 +307,7 @@ async def update_provider(
             "id": provider.id,
             "nome": provider.nome,
             "bio": provider.bio,
-            "categoria": provider.category.nome,
+            "categoria": provider.category.name,
             "cidade": provider.cidade,
             "estado": provider.estado,
             "whatsapp": provider.whatsapp
@@ -328,7 +328,7 @@ async def update_provider_status(
     if provider.user_id != current_user.id:
         raise HTTPException(
             status_code=403,
-            detail="Voce não tem permissão para editar este perfil."
+            detail="Você não tem permissão para editar este perfil."
         )
 
     if not provider:
