@@ -14,25 +14,22 @@ export function AuthProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [token, setToken] = useState<string | null>(null);
+  const [token, setToken] = useState<string | null>(() => {
+    // Migration: read from memory only, not localStorage
+    // Token will come from HttpOnly cookie via withCredentials
+    return null;
+  });
 
   const isAuthenticated = !!token;
 
-  useEffect(() => {
-    const storedToken = localStorage.getItem("chamaai.token");
-
-    if (storedToken) {
-      setToken(storedToken);
-    }
-  }, []);
-
   function signIn(newToken: string) {
-    localStorage.setItem("chamaai.token", newToken);
+    // Token now stored in HttpOnly cookie by backend
+    // This function kept for compatibility during transition
     setToken(newToken);
   }
 
   function signOut() {
-    localStorage.removeItem("chamaai.token");
+    // Backend will clear HttpOnly cookie via /auth/logout
     setToken(null);
   }
 

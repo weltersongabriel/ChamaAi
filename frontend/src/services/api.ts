@@ -1,18 +1,22 @@
 import axios from "axios";
 
 export const api = axios.create({
-  baseURL: "http://127.0.0.1:8000",
+  baseURL: import.meta.env.VITE_API_URL || "http://127.0.0.1:8000",
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true, // Send HttpOnly cookies automatically
 });
 
-api.interceptors.request.use((config) => {
-    const token = localStorage.getItem('chamaai.token');
-
-    if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
+// Optional: Response interceptor for 401 handling
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    if (error.response?.status === 401) {
+      // Token expired or invalid - redirect to login
+      // AuthContext will handle signOut via useEffect or manual call
+      window.location.href = '/login';
     }
-
-    return config;
-});
+    return Promise.reject(error);
+  }
+);
